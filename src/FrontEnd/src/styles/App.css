@@ -7,14 +7,14 @@
 }
 
 body{
-    background-color: #222222;
-    color: rgb(255, 255, 255);
+    background-image: url("../assets/background-image.svg");
+    background-color: rgb(255, 255, 255);
+    background-repeat: no-repeat;
+    background-size: auto;
+    color: rgb(0, 0, 0);
     font-family: "Cinzel", serif;
     font-optical-sizing: auto;
-    display: flex;
-    align-items: center;
-    align-content: center;
-
+    text-align: center;
 }
 
 h1{

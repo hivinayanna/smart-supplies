@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 
-function Home({ favoritos, setFavoritos }) {
+import { NavBar } from "../../components/navbar/navbar";
+
+function Home() {
 
   return (
     <> 
-      <div id="divPrincipal">
-        <h1>Olá amigos</h1>
-      </div>
+      <NavBar/>
     </>
   );
 }

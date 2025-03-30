@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import './pages/Home/Home.css';
+import './styles/App.css';
 import AppRoutes from './routes/routes';
 
 
