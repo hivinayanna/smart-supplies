@@ -8,9 +8,8 @@ export class NavBar extends React.Component {
         return (
             <>
                 <nav className="navbar">
-                    <ul className="nav-links">
-
-                        <div className="menu">
+                    <div className="nav-links">
+                        <ul className="menu">
                             <Link to="/"><li>INÍCIO</li></Link><h4>•</h4>
 
                             <Link to="#"><li>CATEGORIAS DE BEBIDAS</li></Link>
@@ -20,15 +19,15 @@ export class NavBar extends React.Component {
                             <Link to="#"><li>FORNECEDORES</li></Link><h4>•</h4>
 
                             <Link to="#"><li>PRODUTOS</li></Link>
+                        </ul>
 
-                            <Link to="#">
-                                <li className="Login">
+                        <Link to="#">
+                                <button className="Login">
                                     <span className="material-symbols-outlined">login</span>
-                                    Login
-                                </li>
-                            </Link>
-                        </div>
-                    </ul>
+                                    Entrar
+                                </button>
+                        </Link>
+                    </div>
                 </nav>
             </>
         );
