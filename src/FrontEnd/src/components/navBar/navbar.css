@@ -10,9 +10,12 @@ li {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-left: 210px;
+    width: 100%;
     padding: 20px;
     font-family: "Poppins", sans-serif;
-    background-color: rgb(255, 255, 255);
+    background: transparent;
+    position: absolute; /* Permite sobrepor a imagem de fundo */
     font-weight: 100;
     color: #2B4A6B;
 }
@@ -20,16 +23,14 @@ li {
 .nav-links {
     display: flex; 
     align-items: center;
-    margin-left: 50px;
+    gap: 2em;
 }
 
 .nav-links a {
-    margin: 0 15px;
     color: #2B4A6B;
 }
 
-h4 {
-    margin: 0 10px;
+h4 { 
     color: #2B4A6B;
 }
 
@@ -37,42 +38,42 @@ h4 {
 .logo {
     height: 80px;
     width: 80px;
+    display: block;
 }
 
 .Login {
     display: flex; /* Use flexbox for alignment */
-    align-items: center; /* Center items vertically */
-    margin-right: 10px;
+    align-items: center;
+    justify-content: center;
+    margin-left: 170px;
+    gap: 8px;
     color: #FFFFFF;
-    padding: 10px 20px; /* Add more padding for a better look */
-    font-weight: 700;
+    padding: clamp(8px, 0.6vw, 24px) clamp(16px, 1.2vw, 48px);
+    font-weight: 500;
     line-height: 120%;
+    font-size: clamp(14px, 0.938vw, 36px);
     font-family: "Poppins", sans-serif;
     background-color: #1E3550; /* Button background color */
-    border-radius: 28px; /* Rounded corners */
+    border-radius: clamp(28px, 2.5vw, 68px);
     border: 0.5px solid #2B4A6B; /* Border color */
     text-transform: uppercase;
-    text-decoration: none;
-    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease; /* Add transition for hover effects */
+    text-decoration: none !important;
+    text-align: center;
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* Add transition for hover effects */
     cursor: pointer; /* Change cursor to pointer */
 }
 
 .Login:hover {
-    background-color: #2B4A6B; /* Change background on hover */
-    border-color: #ffffff; /* Change border color on hover */
+    background-color: #162b45; /* Change background on hover */
+    border-color: #162b45; /* Change border color on hover */
     transform: scale(1.05); /* Slightly enlarge the button on hover */
-}
-
-.Login .material-icons {
-    margin-right: 25px; /* Space between icon and text */
-    font-size: 20px; /* Adjust icon size */
 }
 
 /* NAVBAR MENU */
 .menu {
     display: flex;
     align-items: center; /* Center items vertically */
-    gap: 1em;
+    gap: 2em;
     font-size: 18px;
 }
 
