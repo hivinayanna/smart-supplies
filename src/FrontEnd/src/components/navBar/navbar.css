@@ -15,7 +15,7 @@ li {
     padding: 20px;
     font-family: "Poppins", sans-serif;
     background: transparent;
-    position: absolute; /* Permite sobrepor a imagem de fundo */
+    position: relative; /* Permite sobrepor a imagem de fundo */
     font-weight: 100;
     color: #2B4A6B;
 }

@@ -1,0 +1,92 @@
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1700px;
+    font-family: "Poppins", sans-serif;
+    margin: auto;
+}
+
+.hero-content {
+    max-width: 50%;
+    text-align: left;
+}
+
+.hero-content h1 {
+    font-size: clamp(48px, 6.667vw, 110px);
+    font-weight: 700;
+    line-height: 120%;
+    letter-spacing: -2px;
+    background: linear-gradient(90deg, #5FA8D3 -9.62%, #2B4A6B 50%, #102A43 101.5%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: clamp(20px, 3.594vw, 30px);
+    font-weight: 700;
+    line-height: 120%;
+    color: #2B4A6B;
+    margin-bottom: 20px;
+}
+
+.hero-text {
+    font-size: clamp(14px, 0.938vw, 36px);
+    font-weight: 400;
+    line-height: 160%;
+    color: #92949fb6;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 40px;
+}
+
+.primary-btn, .secondary-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+}
+
+.primary-btn {
+    background-color: #1E3550;
+    color: white;
+    border: none;
+}
+
+.secondary-btn {
+    background-color: transparent;
+    color: #1E3550;
+    border: 2px solid #1E3550;
+}
+
+/* Estilizando a imagem */
+.hero-image {
+    position: relative;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rectangle {
+    position: absolute;
+    left: 0;
+    bottom: -100px; 
+    width: 510px; 
+    height: 115%;
+    z-index: 1; 
+}
+
+.product {
+    position: relative;
+    max-width: 700px;
+    z-index: 2; 
+}

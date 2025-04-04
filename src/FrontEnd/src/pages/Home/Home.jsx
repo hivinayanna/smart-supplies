@@ -1,12 +1,13 @@
-import React, { useState } from "react";
-
+import React from "react";
 import { NavBar } from "../../components/navBar/navbar";
+import HeroSection from "../../components/heroSection/heroSection";
 
 function Home() {
 
   return (
     <> 
       <NavBar/>
+      <HeroSection/>
     </>
   );
 }
