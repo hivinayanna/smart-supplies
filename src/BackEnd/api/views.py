@@ -38,6 +38,12 @@ def listar_pedidos(request):
 
 @api_view(['POST'])
 def criar_pedido(request):
+    if not request.user.is_authenticated:
+        return Response({'erro': 'Autenticação obrigatória.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.user.tipo_conta != 'vendedor':
+        return Response({'erro': 'Apenas usuários do tipo "vendedor" podem criar produtos.'}, status=status.HTTP_403_FORBIDDEN)
+
     serializer = PedidoSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save(cliente=request.user)
