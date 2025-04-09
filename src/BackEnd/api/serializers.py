@@ -25,7 +25,6 @@ class CreateUsuarioSerializer(serializers.ModelSerializer):
         )
         return user
 
-
 class CategoriaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Categoria
@@ -34,6 +33,7 @@ class CategoriaSerializer(serializers.ModelSerializer):
 class ProdutoSerializer(serializers.ModelSerializer):
     categoria = CategoriaSerializer(read_only=True)
     categoria_id = serializers.PrimaryKeyRelatedField(queryset=Categoria.objects.all(), source='categoria', write_only=True)
+    fornecedor = UsuarioSerializer(read_only=True)
 
     class Meta:
         model = Produto
