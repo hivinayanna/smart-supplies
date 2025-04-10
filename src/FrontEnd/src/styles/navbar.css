@@ -10,7 +10,6 @@ li {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 210px;
     width: 100%;
     padding: 20px;
     font-family: "Poppins", sans-serif;
@@ -23,6 +22,7 @@ li {
 .nav-links {
     display: flex; 
     align-items: center;
+    justify-content: space-between;
     gap: 2em;
 }
 
@@ -45,7 +45,8 @@ h4 {
     display: flex; /* Use flexbox for alignment */
     align-items: center;
     justify-content: center;
-    margin-left: 170px;
+    right: 0;
+    margin-left: auto;
     gap: 8px;
     color: #FFFFFF;
     padding: clamp(8px, 0.6vw, 24px) clamp(16px, 1.2vw, 48px);
