@@ -36,12 +36,11 @@
 .footer-column a {
     color: rgb(173, 171, 171);
     text-decoration: none;
-    transition: 1s;
 }
 
 .footer-column a:hover {
     text-decoration: underline;
-    transition: 1s;
+    transition: 2s;
 }
 
 .footer-line {
@@ -49,8 +48,8 @@
     margin: 20px 0;
 }
 
-.footer-bottom {
+.footer-bottom h4{
     text-align: center;
     margin-top: 10px;
-    color: rgb(173, 171, 171);
+    color: white;
 }

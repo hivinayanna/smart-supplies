@@ -42,7 +42,7 @@ function Footer() {
             </div>
             <div className="footer-line"></div>
             <div className="footer-bottom">
-                <p>© 2025 Smart Supplies. Todos os direitos reservados.</p>
+                <h4>© 2025 Smart Supplies. Todos os direitos reservados.</h4>
             </div>
         </footer>
     );
