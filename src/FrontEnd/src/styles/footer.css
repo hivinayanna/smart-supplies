@@ -8,14 +8,17 @@
 
 .footer-content {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     max-width: 1200px;
     margin: 0 auto;
+    flex-wrap: wrap; /* Permite que as colunas se movam para a próxima linha */
 }
 
 .footer-column {
     flex: 1;
     margin: 0 20px;
+    min-width: 200px; 
+    text-align: center; 
 }
 
 .footer-column h4 {
@@ -48,8 +51,26 @@
     margin: 20px 0;
 }
 
-.footer-bottom h4{
+.footer-bottom h4 {
     text-align: center;
     margin-top: 10px;
     color: white;
+    font-size: 1rem; 
+}
+
+/* Media Query para telas menores */
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column; /* Muda a direção do flex para coluna */
+        align-items: center; /* Centraliza as colunas */
+    }
+
+    .footer-column {
+        margin: 10px 0; /* Margem vertical entre as colunas */
+        /* text-align: center; */ /* Já está definido na classe .footer-column */
+    }
+    .footer-bottom h4 {
+        font-size: 1.2rem; /* Tamanho da fonte reduzido em telas menores */
+        margin-top: 8px; /* Ajuste da margem superior, se necessário */
+    }
 }
