@@ -1,3 +1,4 @@
+/* heroSection.css */
 .hero {
   display: flex;
   align-items: center;
@@ -97,4 +98,35 @@ p {
   position: relative;
   max-width: 800px;
   z-index: 2;
+}
+
+/* Media Query para telas menores (celulares) */
+@media (max-width: 768px) {
+  .hero {
+    margin-top: 60px;
+    flex-direction: column; /* Muda a direção do flex para coluna */
+    align-items: center; /* Centraliza os itens */
+    padding-left: 20px; /* Ajusta o padding para telas menores */
+  }
+
+  .hero-content {
+    max-width: 100%; /* Permite que o conteúdo ocupe toda a largura */
+    text-align: center; /* Centraliza o texto */
+    padding: 0 20px; /* Adiciona padding lateral */
+  }
+
+  .hero-image {
+    margin-top: 20px; /* Adiciona um espaço acima da imagem */
+    align-self: center; /* Centraliza a imagem */
+  }
+
+  .rectangle {
+    width: 100%; /* Ajusta a largura da imagem de fundo */
+    height: auto; /* Mantém a proporção da imagem */
+    bottom: -50px; /* Ajusta a posição da imagem de fundo */
+  }
+
+  .product {
+    max-width: 100%; /* Ajusta a largura do produto */
+  }
 }

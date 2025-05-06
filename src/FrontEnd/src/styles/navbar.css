@@ -1,3 +1,4 @@
+/* navbar.css */
 a {
     text-decoration: none;
 }
@@ -22,8 +23,9 @@ li {
 .nav-links {
     display: flex; 
     align-items: center;
-    justify-content: space-between;
+    justify-content: center; /* Centraliza os itens */
     gap: 2em;
+    flex-grow: 1; /* Permite que a nav-links ocupe o espaço disponível */
 }
 
 .nav-links a {
@@ -41,12 +43,11 @@ h4 {
     display: block;
 }
 
+/* Botão de Login */
 .Login {
     display: flex; /* Use flexbox for alignment */
     align-items: center;
     justify-content: center;
-    right: 0;
-    margin-left: auto;
     gap: 8px;
     color: #FFFFFF;
     padding: clamp(8px, 0.6vw, 24px) clamp(16px, 1.2vw, 48px);
@@ -86,4 +87,30 @@ h4 {
 
 .menu li {
     padding: 5px 14px;
+}
+
+/* Media Query para telas menores */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column; /* Muda a direção do flex para coluna */
+        align-items: center; /* Centraliza os itens */
+        padding: 10px; /* Ajusta o padding */
+    }
+
+    .nav-links {
+        flex-direction: column; /* Empilha os links verticalmente */
+        gap: 1em; /* Ajusta o espaço entre os itens */
+        width: 100%; /* Permite que os links ocupem toda a largura */
+        align-items: center; /* Centraliza os itens */
+    }
+
+    .menu {
+        flex-direction: column; /* Empilha os itens do menu verticalmente */
+        gap: 1em; /* Ajusta o espaço entre os itens do menu */
+    }
+
+    .Login {
+        margin-top: 10px; /* Adiciona espaço acima do botão de login */
+        width: 100%; /* Faz o botão ocupar toda a largura */
+    }
 }
