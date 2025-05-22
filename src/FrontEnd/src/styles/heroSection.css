@@ -104,29 +104,31 @@ p {
 @media (max-width: 768px) {
   .hero {
     margin-top: 60px;
-    flex-direction: column; /* Muda a direção do flex para coluna */
-    align-items: center; /* Centraliza os itens */
-    padding-left: 20px; /* Ajusta o padding para telas menores */
+    flex-direction: column; 
+    align-items: center; 
+    padding-left: 20px; 
   }
 
   .hero-content {
-    max-width: 100%; /* Permite que o conteúdo ocupe toda a largura */
-    text-align: center; /* Centraliza o texto */
-    padding: 0 20px; /* Adiciona padding lateral */
+    max-width: 100%; 
+    text-align: center;
+    padding: 0 20px; 
   }
 
   .hero-image {
-    margin-top: 20px; /* Adiciona um espaço acima da imagem */
-    align-self: center; /* Centraliza a imagem */
+    margin-top: 20px; 
+    align-self: center; 
+    margin-bottom: 40px; 
   }
 
   .rectangle {
-    width: 100%; /* Ajusta a largura da imagem de fundo */
-    height: auto; /* Mantém a proporção da imagem */
-    bottom: -50px; /* Ajusta a posição da imagem de fundo */
+    width: 100%; 
+    height: auto; 
+    bottom: -50px; 
+    margin-bottom: 50px; 
   }
 
   .product {
-    max-width: 100%; /* Ajusta a largura do produto */
+    max-width: 100%;
   }
 }
