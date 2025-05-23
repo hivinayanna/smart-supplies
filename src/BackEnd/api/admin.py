@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Usuario
+from .models import Usuario, Produto, Categoria, Pedido, ItemPedido, Fornecedor
 
 @admin.register(Usuario)
 class UserAdmin(admin.ModelAdmin):
@@ -33,4 +33,9 @@ class UserAdmin(admin.ModelAdmin):
             )
         }),
     )
-    
+
+admin.site.register(Categoria)
+admin.site.register(Produto)
+admin.site.register(Pedido)
+admin.site.register(ItemPedido)
+admin.site.register(Fornecedor)
