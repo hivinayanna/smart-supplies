@@ -34,10 +34,12 @@ class ProdutoSerializer(serializers.ModelSerializer):
     categoria = CategoriaSerializer(read_only=True)
     categoria_id = serializers.PrimaryKeyRelatedField(queryset=Categoria.objects.all(), source='categoria', write_only=True)
     fornecedor = UsuarioSerializer(read_only=True)
+    fornecedor_id = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all(), source='fornecedor', write_only=True)
+
 
     class Meta:
         model = Produto
-        fields = ['id', 'nome', 'descricao', 'preco', 'quantidade_estoque', 'categoria', 'categoria_id']
+        fields = ['id', 'nome', 'descricao', 'preco', 'quantidade_estoque', 'categoria', 'categoria_id', 'fornecedor', 'fornecedor_id']
 
 class FornecedorSerializer(serializers.ModelSerializer):
     class Meta:
