@@ -1,0 +1,151 @@
+/* Remove estilos flex do body, centralizando só o login-wrapper */
+body {
+    margin: 0;
+}
+
+/* Container que centraliza o Login */
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 60px 20px; /* Margens laterais reduzidas para telas menores */
+}
+
+/* Estilização do container interno do Login (auth-container) */
+.auth-container {
+    max-width: 400px;
+    width: 100%;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+/* Estilização da logo */
+.logo {
+    display: block;
+    margin: 0 auto;
+    width: 80px;
+    height: 80px;
+}
+
+.auth-container h2 {
+    text-align: center;
+    color: #1E3550;
+    font-weight: 700;
+}
+
+.auth-container div {
+    margin-bottom: 10px;
+}
+
+.auth-container input {
+    margin-top: 20px;
+}
+
+.select-input {
+    margin-top: 20px;
+    height: 40px;
+}
+
+.auth-container input,
+.auth-container select {
+    width: 90%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.auth-container input {
+    height: 40px;
+}
+
+.auth-container button {
+    width: 90%;
+    height: 45px;
+    padding: 10px;
+    background-color: #1E3550;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.auth-container button:hover {
+    background-color: #162b45;
+}
+
+/* Estilos do "Esqueci a senha" e alternância já existentes */
+.forgot-password {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.forgot-password a {
+    color: #1E3550;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    margin: 15px;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+}
+
+.privacy-link {
+    color: #1E3550;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    margin: 15px;
+    margin-top: 5%;
+}
+
+.privacy-link:hover {
+    text-decoration: underline; /* Sublinhado para indicar que é um link */
+}
+
+/* Media Queries para Responsividade */
+@media (max-width: 768px) {
+    .login-wrapper {
+        margin: 30px 10px; /* Reduzir margens em telas menores */
+    }
+
+    .auth-container {
+        padding: 15px; /* Reduzir o padding do container */
+    }
+
+    .auth-container h2 {
+        font-size: 1.5em; /* Ajustar o tamanho da fonte do título */
+    }
+
+    .auth-container input,
+    .auth-container select,
+    .auth-container button {
+        width: 100%; /* Garantir que os inputs e botões ocupem 100% da largura */
+    }
+
+    .privacy-link {
+        padding-top: 15px;
+        font-size: 12px; /* Ajustar o tamanho da fonte do link */
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-container h2 {
+        font-size: 1.2em; /* Ajustar ainda mais o tamanho da fonte do título */
+    }
+
+    .auth-container input,
+    .auth-container select,
+    .auth-container button {
+        height: 40px; /* Ajustar a altura dos inputs e botões */
+    }
+
+    .privacy-link {
+        font-size: 11px; /* Ajustar o tamanho da fonte do link */
+    }
+}
