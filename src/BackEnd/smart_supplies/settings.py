@@ -16,19 +16,20 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # apps do projeto
+    # Aqui estãp os apps do projeto
     'api',
 
     # rest framework
     'rest_framework',
-
-    
 ]
 
 REST_FRAMEWORK = {
+    # Autenticação padrão usando JWT (JSON Web Tokens)
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    # Backend padrão para filtros usando django-filters
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
 
 
@@ -64,6 +65,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'smart_supplies.wsgi.application'
 
+# Configuração do banco SQLite para desenvolvimento local (temporário)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -72,6 +74,8 @@ DATABASES = {
 }
 
 '''
+Configuração comentada para usar PostgreSQL em ambiente real ou produção
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
