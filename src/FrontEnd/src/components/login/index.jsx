@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import logo from "../../assets/Logo.png";
 import "../../styles/login.css";
+import axios from "axios";
 
 function Login() {
     const [isLogin, setIsLogin] = useState(true); // Estado para alternar entre login e cadastro
@@ -11,8 +12,12 @@ function Login() {
     const [telefone, setTelefone] = useState("");
     const [endereco, setEndereco] = useState("");
     const [tipoConta, setTipoConta] = useState(""); // Valor inicial vazio para placeholder
+    
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!isLogin) {
             if (senha !== confirmaSenha) {
@@ -21,14 +26,33 @@ function Login() {
             }
         }
 
+        const data = { 
+            "username": "to_be_addeddd",
+            "nome_completo": nomeCompleto,
+            "telefone": telefone,
+            "endereco": endereco,
+            "tipo_conta": tipoConta,
+            "email": email,
+            "password": senha
+        }
+
         if (isLogin) {
             // Lógica de login
             console.log("Login:", { email, senha });
         } else {
+            try {
             // Lógica de cadastro
-            console.log("Cadastro:", { nomeCompleto, telefone, endereco, tipoConta, email, senha });
+            const response = await axios.post("http://localhost:8000/api/usuarios/novo/", data);
+            console.log("Cadastro:", data);
+            console.log("Resposta: ", response)
+            alert("Cadastro realizado com sucesso!")
+
+            } catch (error) {
+                alert("Erro ao cadastrar. Consulte o console no F12")
+            }
         }
     };
+
 
     return (
         <div className="auth-container">

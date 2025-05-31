@@ -234,3 +234,44 @@ test*.*
 
 #.pem files
 *.pem
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependencies
+/node_modules
+/bower_components
+
+# Production
+/build
+/dist
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Editor and IDE files
+.*.swp
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Temporary files
+*~
+*.tmp
+
+# Environment variables file
+.env
+.env.*
+!.env.example
+
+# Optional: package-lock.json or yarn.lock (if you don't want to track dependency versions)
+# package-lock.json
+# yarn.lock
