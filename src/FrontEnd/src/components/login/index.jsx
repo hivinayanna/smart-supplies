@@ -26,7 +26,7 @@ function Login() {
             }
         }
 
-        const data = { 
+        const register_data = { 
             "username": "to_be_addeddd",
             "nome_completo": nomeCompleto,
             "telefone": telefone,
@@ -36,13 +36,21 @@ function Login() {
             "password": senha
         }
 
+        const login_data = {
+            "username": "nicolas",
+            "password": "roo"
+        }
+
         if (isLogin) {
             // Lógica de login
+            const response = await axios.post("http://127.0.0.1:8000/api/token/", login_data);
             console.log("Login:", { email, senha });
+            console.log("Resposta: ", response)
+            alert("Usuário logado com sucesso!")
         } else {
             try {
             // Lógica de cadastro
-            const response = await axios.post("http://localhost:8000/api/usuarios/novo/", data);
+            const response = await axios.post("http://localhost:8000/api/usuarios/novo/", register_data);
             console.log("Cadastro:", data);
             console.log("Resposta: ", response)
             alert("Cadastro realizado com sucesso!")
