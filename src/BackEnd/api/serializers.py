@@ -45,6 +45,11 @@ class ProdutoSerializer(serializers.ModelSerializer):
         model = Produto
         fields = ['id', 'nome', 'descricao', 'preco', 'quantidade_estoque', 'categoria', 'categoria_id', 'fornecedor', 'fornecedor_id']
 
+class ProdutoResumoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Produto
+        fields = ['id','nome','preco']
+        
 # Serializer para exibir fornecedores
 class FornecedorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -53,13 +58,26 @@ class FornecedorSerializer(serializers.ModelSerializer):
 
 # Serializer para itens de pedido
 class ItemPedidoSerializer(serializers.ModelSerializer):
+    produto = ProdutoResumoSerializer(read_only=True)
+    produto_id = serializers.PrimaryKeyRelatedField(queryset=Produto.objects.all(), source='produto', write_only=True)
+    subtotal = serializers.SerializerMethodField()
+
     class Meta:
         model = ItemPedido
-        fields = ['id', 'produto', 'quantidade', 'preco_unitario', 'subtotal']
+        fields = ['id', 'produto', 'produto_id', 'quantidade', 'preco_unitario', 'subtotal']
+
+    def get_subtotal(self, obj):
+        return obj.quantidade * obj.preco_unitario
+    
+class ClienteResumoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Usuario
+        fields = ['id', 'username', 'nome_completo']
 
 # Serializer para pedidos com criação customizada de itens
 class PedidoSerializer(serializers.ModelSerializer):
     itens = ItemPedidoSerializer(many=True)  # Lista de itens incluídos no pedido
+    cliente = ClienteResumoSerializer(read_only=True)
 
     class Meta:
         model = Pedido
