@@ -20,6 +20,7 @@ body {
     border: 1px solid #ccc;
     border-radius: 8px;
     background-color: #f9f9f9;
+    margin-bottom: 50px;
 }
 
 /* Estilização da logo */
@@ -78,12 +79,12 @@ body {
 }
 
 /* Estilos do "Esqueci a senha" e alternância já existentes */
-.forgot-password {
+.privacy-link, .forgot-password{
     margin-top: 10px;
     text-align: center;
 }
 
-.forgot-password a {
+ .privacy-link a, .forgot-password a{
     color: #1E3550;
     text-decoration: none;
     font-weight: 500;
@@ -91,22 +92,10 @@ body {
     margin: 15px;
 }
 
-.forgot-password a:hover {
+.privacy-link a:hover, .forgot-password a:hover  {
     text-decoration: underline;
 }
 
-.privacy-link {
-    color: #1E3550;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 14px;
-    margin: 15px;
-    margin-top: 5%;
-}
-
-.privacy-link:hover {
-    text-decoration: underline; /* Sublinhado para indicar que é um link */
-}
 
 /* Media Queries para Responsividade */
 @media (max-width: 768px) {

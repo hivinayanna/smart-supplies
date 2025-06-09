@@ -4,63 +4,55 @@ import "../../styles/login.css";
 import axios from "axios";
 
 function Login() {
-    const [isLogin, setIsLogin] = useState(true); // Estado para alternar entre login e cadastro
+    const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const [confirmaSenha, setConfirmaSenha] = useState("");
     const [nomeCompleto, setNomeCompleto] = useState("");
     const [telefone, setTelefone] = useState("");
     const [endereco, setEndereco] = useState("");
-    const [tipoConta, setTipoConta] = useState(""); // Valor inicial vazio para placeholder
-    
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
+    const [tipoConta, setTipoConta] = useState("");
+    const [username, setUsername] = useState(""); // ⬅️ Novo campo
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!isLogin) {
-            if (senha !== confirmaSenha) {
-                alert("As senhas não coincidem.");
-                return;
-            }
+        if (!isLogin && senha !== confirmaSenha) {
+            alert("As senhas não coincidem.");
+            return;
         }
 
-        const register_data = { 
-            "username": "to_be_addeddd",
-            "nome_completo": nomeCompleto,
-            "telefone": telefone,
-            "endereco": endereco,
-            "tipo_conta": tipoConta,
-            "email": email,
-            "password": senha
-        }
+        const register_data = {
+            username: username, // ⬅️ Agora usando o valor correto
+            nome_completo: nomeCompleto,
+            telefone: telefone,
+            endereco: endereco,
+            tipo_conta: tipoConta,
+            email: email,
+            password: senha
+        };
 
         const login_data = {
-            "username": "nicolas",
-            "password": "roo"
-        }
+            username: username, // ⬅️ Alterado para usar o username digitado
+            password: senha
+        };
 
-        if (isLogin) {
-            // Lógica de login
-            const response = await axios.post("http://127.0.0.1:8000/api/token/", login_data);
-            console.log("Login:", { email, senha });
-            console.log("Resposta: ", response)
-            alert("Usuário logado com sucesso!")
-        } else {
-            try {
-            // Lógica de cadastro
-            const response = await axios.post("http://localhost:8000/api/usuarios/novo/", register_data);
-            console.log("Cadastro:", data);
-            console.log("Resposta: ", response)
-            alert("Cadastro realizado com sucesso!")
-
-            } catch (error) {
-                alert("Erro ao cadastrar. Consulte o console no F12")
+        try {
+            if (isLogin) {
+                const response = await axios.post("http://127.0.0.1:8000/api/token/", login_data);
+                console.log("Login:", login_data);
+                console.log("Resposta: ", response);
+                alert("Usuário logado com sucesso!");
+            } else {
+                const response = await axios.post("http://localhost:8000/api/usuarios/novo/", register_data);
+                console.log("Cadastro:", register_data);
+                console.log("Resposta: ", response);
+                alert("Cadastro realizado com sucesso!");
             }
+        } catch (error) {
+            console.error("Erro:", error);
+            alert("Erro ao processar. Consulte o console para detalhes.");
         }
     };
-
 
     return (
         <div className="auth-container">
@@ -70,10 +62,10 @@ function Login() {
                 {isLogin ? (
                     <>
                         <input
-                            type="email"
-                            placeholder="Email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            type="text"
+                            placeholder="Usuário"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
                             required
                         />
                         <input
@@ -86,6 +78,13 @@ function Login() {
                     </>
                 ) : (
                     <>
+                        <input
+                            type="text"
+                            placeholder="Usuário"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
                         <input
                             type="text"
                             placeholder="Nome Completo"
@@ -142,9 +141,7 @@ function Login() {
                 )}
                 <button type="submit">{isLogin ? "Entrar" : "Cadastrar"}</button>
             </form>
-            <button onClick={() => {
-                setIsLogin(!isLogin);
-            }}>
+            <button onClick={() => setIsLogin(!isLogin)}>
                 {isLogin ? "Criar uma conta" : "Já tenho uma conta"}
             </button>
             {isLogin && (
@@ -153,8 +150,9 @@ function Login() {
                 </div>
             )}
             {!isLogin && (
-                <a href="/politica-de-privacidade" className="privacy-link">política de privacidade</a>
-
+                <div  className="privacy-link">
+                    <a href="/politica-de-privacidade">política de privacidade</a>
+                </div>
             )}
         </div>
     );
