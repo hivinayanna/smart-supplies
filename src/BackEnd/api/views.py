@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status, generics
 from rest_framework.permissions import IsAuthenticated
@@ -77,6 +77,15 @@ def listar_fornecedores(request):
     serializer = FornecedorSerializer(fornecedores, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def listar_produtos_do_fornecedor(request):
+    if request.user.tipo_conta != 'vendedor':
+        return Response({'erro':'Apenas vendedores podem acessar seus produtos.'}, status=403)
+
+    produtos = Produto.objects.filter(fornecedor=request.user)
+    serializer = ProdutoSerializer(produtos, many=True)
+    return Response(serializer.data)
 # View para criação de novos usuários
 class UsuarioCreateView(generics.CreateAPIView):
     queryset = Usuario.objects.all()
@@ -100,6 +109,7 @@ class ProdutoUpdateDeleteView(RetrieveUpdateDestroyAPIView):
         if self.request.user != instance.fornecedor:
             raise PermissionDenied('Voce não tem permissão para deletar o produto.')
         instance.delete()
+
 
 # Endpoint para listar categorias disponíveis
 @api_view(['GET'])

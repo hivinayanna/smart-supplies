@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     listar_produtos, criar_produto, DetalharProdutoView,
     listar_pedidos, criar_pedido, listar_fornecedores, UsuarioCreateView,
-    ProdutoUpdateDeleteView, listar_categorias
+    ProdutoUpdateDeleteView, listar_categorias, listar_produtos_do_fornecedor
 )
 
 urlpatterns = [
@@ -18,9 +18,13 @@ urlpatterns = [
     # Rota para listagem de fornecedores
     path('fornecedores/', listar_fornecedores, name='listar_fornecedores'),
 
+    # Rota para listagem produtos do fornecedores
+    path('fornecedor/produtos/', listar_produtos_do_fornecedor, name='meus_produtos'),
+
     # Rota para criação de novo usuário
     path('usuarios/novo/', UsuarioCreateView.as_view(), name='usuario-create'),
 
     # Rota para listagem de categorias
     path('categorias/', listar_categorias, name='listar_categorias'),
+
 ]
