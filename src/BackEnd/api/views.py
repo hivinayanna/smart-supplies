@@ -4,8 +4,8 @@ from rest_framework import status, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import RetrieveAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.exceptions import PermissionDenied 
-from .models import Produto, Pedido, Fornecedor, Usuario, Categoria
-from .serializers import ProdutoSerializer, PedidoSerializer, FornecedorSerializer, CreateUsuarioSerializer, CategoriaSerializer
+from .models import Produto, Pedido, Fornecedor, Usuario, Categoria, Carrinho, ItemCarrinho
+from .serializers import ProdutoSerializer, PedidoSerializer, FornecedorSerializer, CreateUsuarioSerializer, CategoriaSerializer, CarrinhoSerializer, ItemCarrinhoSerializer
 
 # Endpoint para listar produtos, com filtros opcionais por categoria e nome
 @api_view(['GET'])
@@ -117,3 +117,65 @@ def listar_categorias(request):
     categorias = Categoria.objects.all()
     serializer = CategoriaSerializer(categorias, many=True)
     return Response(serializer.data)
+
+# Aqui eu obter ou criar o carrinho do usuario(caso ele não tenha)
+def get_or_create_cart(user):
+    carrinho, created = Carrinho.objects.get_or_create(usuario=user)
+    return carrinho
+
+# Ver o carrinho
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def ver_carrinho(request):
+    carrinho, _ = Carrinho.objects.get_or_create(usuario=request.user)
+    serializer = CarrinhoSerializer(carrinho)
+    return Response(serializer.data)
+
+#Adicionar item ao carrinho
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def adicionar_ao_carrinho(request):
+    carrinho = get_or_create_cart(request.user)
+    produto_id = request.data.get('produto_id')
+    quantidade = request.data.get('quantidade', 1)
+
+    try:
+        produto = Produto.objects.get(id=produto_id)
+    except Produto.DoesNotExist:
+        return Response({'erro': 'Produto não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+
+    item, created = ItemCarrinho.objects.get_or_create(carrinho=carrinho, produto=produto, defaults={
+        'quantidade': quantidade,
+        'preco_unitario': produto.preco,
+    })
+
+    if not created:
+        item.quantidade += int(quantidade)
+        item.save()
+
+    return Response({'mensagem': 'Produto adicionado ao carrinho com sucesso.'})
+
+# Atualizar quantidade de um item do carrinho
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def atualizar_item_carrinho(request, item_id):
+    try:
+        item = ItemCarrinho.objects.get(id=item_id, carrinho__usuario=request.user)
+    except ItemCarrinho.DoesNotExist:
+        return Response({'erro': 'Item não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+
+    item.quantidade = request.data.get('quantidade', item.quantidade)
+    item.save()
+    return Response({'mensagem': 'Item atualizado com sucesso.'})
+
+
+# Remover item do carrinho
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def remover_item_carrinho(request, item_id):
+    try:
+        item = ItemCarrinho.objects.get(id=item_id, carrinho__usuario=request.user)
+        item.delete()
+        return Response({'mensagem': 'Item removido do carrinho.'})
+    except ItemCarrinho.DoesNotExist:
+        return Response({'erro': 'Item não encontrado.'}, status=status.HTTP_404_NOT_FOUND)

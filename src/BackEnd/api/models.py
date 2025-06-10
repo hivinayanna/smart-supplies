@@ -53,6 +53,7 @@ class Produto(models.Model):
     quantidade_estoque = models.PositiveIntegerField()  # Quantidade disponível no estoque
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, related_name='produtos')  # Categoria associada, em cascata na exclusão
     fornecedor = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='produtos')  # Usuário fornecedor do produto
+    imagem = models.ImageField(upload_to='produtos/', blank=True, null=True)
 
     def __str__(self):
         # Retorna o nome do produto
@@ -81,3 +82,26 @@ class ItemPedido(models.Model):
     def __str__(self):
         # Representação textual do item com quantidade, nome do produto e ID do pedido
         return f'{self.quantidade} x {self.produto.nome} - Pedido {self.pedido.id}'
+    
+class Carrinho(models.Model):
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='carrinho')
+    criado_em = models.DateTimeField(auto_now_add=True)
+    atualizado_em = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'Carrinho de {self.usuario.username}'
+    
+    def total(self):
+        return sum(item.subtotal() for item in self.itens.all())
+    
+class ItemCarrinho(models.Model):
+    carrinho = models.ForeignKey(Carrinho, on_delete=models.CASCADE, related_name='itens')
+    produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
+    quantidade = models.PositiveIntegerField(default=1)
+    preco_unitario = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def subtotal(self):
+        return self.quantidade * self.produto.preco
+    
+    def __str__(self):
+        return f'{self.quantidade} x {self.produto.nome} - Carrinho de {self.carrinho.usuario.username}'

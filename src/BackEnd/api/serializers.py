@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Usuario, Produto, Categoria, Pedido, ItemPedido, Fornecedor
+from .models import Usuario, Produto, Categoria, Pedido, ItemPedido, Fornecedor, Carrinho, ItemCarrinho
 
 # Serializer para exibir informações do usuário
 class UsuarioSerializer(serializers.ModelSerializer):
@@ -40,10 +40,11 @@ class ProdutoSerializer(serializers.ModelSerializer):
     categoria_id = serializers.PrimaryKeyRelatedField(queryset=Categoria.objects.all(), source='categoria', write_only=True)  # ID usado na criação/edição
     fornecedor = UsuarioSerializer(read_only=True)  # Representação detalhada do fornecedor
     fornecedor_id = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all(), source='fornecedor', write_only=True)  # ID usado na criação/edição
+    imagem = serializers.ImageField(required=False)
 
     class Meta:
         model = Produto
-        fields = ['id', 'nome', 'descricao', 'preco', 'quantidade_estoque', 'categoria', 'categoria_id', 'fornecedor', 'fornecedor_id']
+        fields = ['id', 'nome', 'descricao', 'preco', 'quantidade_estoque', 'categoria', 'categoria_id', 'fornecedor', 'fornecedor_id', 'imagem']
 
 class ProdutoResumoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -90,3 +91,31 @@ class PedidoSerializer(serializers.ModelSerializer):
         for item in itens_data:
             ItemPedido.objects.create(pedido=pedido, **item)
         return pedido
+
+# Item do carrinho(exibir e criar)
+class ItemCarrinhoSerializer(serializers.ModelSerializer):
+    produto = ProdutoResumoSerializer(read_only=True)
+    produto_id = serializers.PrimaryKeyRelatedField(
+        queryset=Produto.objects.all(), source='produto', write_only=True
+    )
+    subtotal = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ItemCarrinho
+        fields = ['id', 'produto', 'produto_id', 'quantidade', 'preco_unitario', 'subtotal']
+
+    def get_subtotal(self, obj):
+        return obj.quantidade * obj.preco_unitario
+
+# Carrinho mesmo
+class CarrinhoSerializer(serializers.ModelSerializer):
+    itens = ItemCarrinhoSerializer(many=True, read_only=True)
+    total = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Carrinho
+        fields = ['id', 'usuario', 'criado_em', 'atualizado_em', 'itens', 'total']
+        read_only_fields = ['usuario', 'criado_em', 'atualizado_em']
+
+    def get_total(self, obj):
+        return obj.total()
