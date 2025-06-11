@@ -2,6 +2,7 @@ import ProdutoList from "../../components/produtoList";
 import SideNavBar from "../../components/sideNavBar";
 import Footer from "../../components/footer";
 import Carrossel from "../../components/carrossel";
+import { useSearchParams } from "react-router-dom";
 
 
 const imagensBanner = [
@@ -12,11 +13,13 @@ const imagensBanner = [
 
 
 function StartPage() {
+  // const [searchParams] = useSearchParams()
   return (
     <>
       <div className="start-page">
         <Carrossel imagens={imagensBanner} />
-        <SideNavBar tipoUsuario = {"vendedor"}/>
+        {/* <SideNavBar tipoUsuario = {searchParams.get('tipoUsuario')}/> */}
+        <SideNavBar tipoUsuario = {sessionStorage.getItem('tipoUsuario')}/>
         <ProdutoList />
       </div>
       <Footer />

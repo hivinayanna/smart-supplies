@@ -14,7 +14,7 @@ function ProdutoList() {
 
   // Simulação de fetch de dados (produtos mockados)
 useEffect(() => {
-  const mockProdutos = [
+  const mockProdutos = useMemo(()=>[
     {
       id: 1,
       nome: "Cachaça Pimba",
@@ -135,7 +135,7 @@ useEffect(() => {
       fornecedor: { nome: "CodeBoost" },
       imagem: "https://cdn.dooca.store/4309/products/701d27b0222a52d1980f7e84ff282b4c.jpg?v=1653064450"
     }
-  ];
+  ], [categorias]);;
 
   setProdutos(mockProdutos);
 }, []);

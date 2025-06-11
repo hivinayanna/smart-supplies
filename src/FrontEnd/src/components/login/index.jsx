@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import logo from "../../assets/Logo.png";
 import "../../styles/login.css";
 import axios from "axios";
+import  { useNavigate } from "react-router-dom";
 
 function Login() {
     const [isLogin, setIsLogin] = useState(true);
@@ -13,6 +14,8 @@ function Login() {
     const [endereco, setEndereco] = useState("");
     const [tipoConta, setTipoConta] = useState("");
     const [username, setUsername] = useState(""); // ⬅️ Novo campo
+
+    const redirect = useNavigate()
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -139,14 +142,22 @@ function Login() {
                         />
                     </>
                 )}
-                <button type="submit">{isLogin ? "Entrar" : "Cadastrar"}</button>
+                <button type="submit" onClick={()=>{
+
+                        // if (username || alert("Teste de errado ticou"), redirect("/Auth"))
+                            sessionStorage.setItem('tipoUsario', 'vendedor')
+                            redirect(`/start`)
+
+                    }}>{isLogin ? "Entrar" : "Cadastrar"}</button>
+
+
             </form>
             <button onClick={() => setIsLogin(!isLogin)}>
                 {isLogin ? "Criar uma conta" : "Já tenho uma conta"}
             </button>
             {isLogin && (
                 <div className="forgot-password">
-                    <a href="/esqueci-senha">Esqueci a senha</a>
+                    <a >Esqueci a senha</a>
                 </div>
             )}
             {!isLogin && (
