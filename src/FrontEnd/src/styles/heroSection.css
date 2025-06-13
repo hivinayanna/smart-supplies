@@ -1,9 +1,15 @@
+.hero-total {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  font-family: "Poppins", sans-serif;
+}
+
 .hero {
   display: flex;
   align-items: center;
   justify-content: space-between;
   max-width: 100%;
-  font-family: "Poppins", sans-serif;
   margin: auto;
   position: relative;
   padding-left: 90px;
@@ -12,6 +18,8 @@
 .hero-content {
   max-width: 50%;
   text-align: left;
+  padding-left: 40px;
+  white-space: nowrap;
 }
 
 .hero-content h1 {
@@ -31,19 +39,20 @@
   margin-bottom: 10px;
 }
 
-p {
-  font-size: clamp(20px, 3.594vw, 30px);
+.hero-content p {
+  font-size: clamp(20px, 3.594vw, 40px);
   font-weight: 700;
   line-height: 120%;
   color: #2b4a6b;
   margin-bottom: 20px;
 }
 
-.hero-text {
-  font-size: clamp(14px, 0.938vw, 36px);
-  font-weight: 400;
+.hero-content p:nth-of-type(2) {
+  font-size: 25px;
+  font-weight: 300;
   line-height: 160%;
-  color: #92949fb6;
+  color: #92949f;
+  white-space: normal;
 }
 
 .hero-buttons {
@@ -54,25 +63,25 @@ p {
 
 .primary-btn,
 .secondary-btn {
-  padding: 10px 20px;
+  padding: 12px 30px;
   font-size: 16px;
   font-weight: bold;
-  border-radius: 5px;
+  border-radius: 30px;
   cursor: pointer;
   text-transform: uppercase;
   margin-bottom: 30px;
 }
 
 .primary-btn {
-  background-color: #1e3550;
+  background-color: #2b4a6b;
   color: white;
   border: none;
 }
 
 .secondary-btn {
   background-color: transparent;
-  color: #1e3550;
-  border: 2px solid #1e3550;
+  color: #2b4a6b;
+  border: 2px solid #2b4a6b;
 }
 
 /* Estilizando a imagem */
@@ -97,4 +106,249 @@ p {
   position: relative;
   max-width: 800px;
   z-index: 2;
+}
+
+/* container de beneficios */
+.container-beneficios {
+  display: flex;
+  background-color: #aab8c6;
+  width: 100%;
+  height: auto;
+  margin-top: 40px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.fardos {
+  width: 30%;
+  height: auto;
+  margin-top: 100px;
+  margin-bottom: 100px;
+}
+
+.beneficios-intro {
+  display: flex;
+  flex-direction: column;
+  margin-left: 40px;
+  width: calc(70% - 40px); /* ajusta a largura considerando a margem */
+  margin-top: 85px;
+  margin-bottom: 50px;
+  box-sizing: border-box;
+}
+
+.beneficios {
+  margin-top: 80px;
+}
+
+.beneficios p {
+  font-weight: 400;
+  font-size: 22px;
+  color: #6d7a8b;
+  line-height: 1.5;
+  white-space: pre-line;
+  width: 100%;
+  text-align: start;
+  padding-left: 13px;
+}
+
+.tipos-beneficios {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding: 20px 0;
+  margin-top: 80px;
+  margin-right: 50px;
+  align-items: center;
+}
+
+.tipos-beneficios h3 {
+  font-size: 23px;
+  font-weight: semi-bold;
+  color: #334b6f;
+  margin-bottom: 10px;
+}
+
+.tipos-beneficios p {
+  font-size: 21px;
+  font-weight: normal;
+  color: #747789;
+}
+
+.elipse {
+  background: radial-gradient(circle, #d9d9d9, #3a597a);
+  height: 75px;
+  width: 75px;
+  border-radius: 50%;
+  margin-bottom: 50px;
+}
+
+.beneficio-1 img,
+.beneficio-2 img,
+.beneficio-3 img,
+.beneficio-4 img {
+  width: 40px;
+  height: 40px;
+  margin: 17px;
+}
+
+.beneficio-1,
+.beneficio-2,
+.beneficio-3,
+.beneficio-4 {
+  display: flex;
+  align-items: center;
+}
+
+.texto-beneficio {
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+  padding-left: 30px;
+  padding-bottom: 30px;
+}
+
+/* categoria de bebidas */
+
+.info-da-secao {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-left: 150px;
+  margin-top: 40px;
+  flex-wrap: nowrap;
+}
+
+.titulo {
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+}
+
+.categoria-de-bebidas {
+  padding: 40px;
+}
+
+/* .info-da-secao img {
+  flex-shrink: 0;
+} */
+
+.info-da-secao p {
+  flex-basis: 60%;
+  margin-top: 20px;
+  text-align: start;
+}
+
+.cards-categorias {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 40px;
+}
+
+.card-categoria {
+  border: 1px solid #102a43;
+  border-radius: 15px;
+  width: 70%;
+  max-width: 500px;
+  margin-bottom: 60px;
+  margin-left: 90px;
+  padding: 30px;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: start;
+}
+
+.card-categoria h3 {
+  color: #2b4a6b;
+  font-size: 24px;
+  margin-bottom: 30px;
+  text-align: start;
+}
+
+.card-categoria img {
+  width: 40%;
+  height: auto;
+  position: absolute;
+  top: -40px;
+  right: -60px;
+  /* margin-bottom: 15px; */
+}
+
+.saiba-mais {
+  background: #2b4a6b;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.saiba-mais:hover {
+  background: #1e3857;
+}
+
+/* parceiros */
+
+.fotos-parceiros {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 60px;
+  flex-wrap: wrap;
+}
+
+.parceiro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.parceiro img {
+  height: 700px;
+  max-width: 100%;
+  margin-top: 30px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.parceiro h4 {
+  color: #2b4a6b;
+  font-size: 23px;
+  margin: 0 0 5px 0;
+}
+
+.parceiro p {
+  color: #92949f;
+  font-size: 20px;
+}
+
+.botao-fornecedor {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.ver-fornecedores-btn {
+  background: #2b4a6b;
+  color: white;
+  padding: 15px 30px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.ver-fornecedores-btn:hover {
+  background: #1e3857;
+}
+
+@media (max-width: 1920px) {
+  .parceiro img {
+    height: 600px;
+  }
 }
