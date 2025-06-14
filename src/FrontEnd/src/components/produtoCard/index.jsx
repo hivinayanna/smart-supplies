@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import '../../styles/produtoCard.css';
 import { Link } from 'react-router-dom';
 
+const host = import.meta.env.REACT_APP_HOST || "http://localhost:8000";
 const ProdutoCard = ({ produto }) => {
     const [quantidade, setQuantidade] = useState(1);
 
@@ -17,7 +18,7 @@ const ProdutoCard = ({ produto }) => {
         <div className="produto-card">
             <Link>
                 <img
-                    src={produto.imagem || "https://via.placeholder.com/280x180.png?text=Produto"}
+                    src={produto.imagem ? `${host}/${produto.imagem}` : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROJGo_BDmE1BQXej-UemTXxZG6RkDsA95ZnA&s"}
                     alt={produto.nome}
                 />
             </Link>
@@ -25,10 +26,10 @@ const ProdutoCard = ({ produto }) => {
             <div className="card-content">
                 <h2>{produto.nome}</h2>
                 <p><strong>Descrição:</strong> {produto.descricao || 'Sem descrição'}</p>
-                <p><strong>Preço:</strong> R$ {produto.preco.toFixed(2)}</p>
+                <p><strong>Preço:</strong> R$ {produto.preco}</p>
                 <p><strong>Estoque:</strong> {produto.quantidade_estoque}</p>
                 <p><strong>Categoria:</strong> {produto.categoria?.nome}</p>
-                <p><strong>Fornecedor:</strong> {produto.fornecedor?.nome}</p>
+                <p><strong>Fornecedor:</strong> {produto.fornecedor?.username}</p>
             </div>
 
             <div className="card-footer">

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../../assets/Logo.png";
 import "../../styles/login.css";
 import axios from "axios";
@@ -14,8 +14,18 @@ function Login() {
     const [endereco, setEndereco] = useState("");
     const [tipoConta, setTipoConta] = useState("");
     const [username, setUsername] = useState(""); // ⬅️ Novo campo
+    const [sessionExpired, setSessionExpired] = useState(false); // Verifica se a sessão expirou
 
     const redirect = useNavigate()
+    // TODO: retirar valor default depois
+    const host = import.meta.env.REACT_APP_HOST || "http://localhost:8000";
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        if (queryParams.get('sessionExpired')) {
+            setSessionExpired(true);
+        }
+    }, [location]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -40,13 +50,25 @@ function Login() {
         };
 
         try {
+            let response;
             if (isLogin) {
-                const response = await axios.post("http://127.0.0.1:8000/api/token/", login_data);
+                response = await axios.post(`${host}/api/token/`, login_data);
                 console.log("Login:", login_data);
                 console.log("Resposta: ", response);
                 alert("Usuário logado com sucesso!");
+
+                if (response.data.access) {
+                    console.log(`token: ${response.data.access}`)
+                    sessionStorage.setItem('tipoUsuario', response.data.tipo_usuario);
+                    sessionStorage.setItem('accessToken', response.data.access);
+                    redirect(`/start`)
+                }
+                console.log(response.status)
+                if (response.status == 401) {
+                   redirect(`/login`);
+                }
             } else {
-                const response = await axios.post("http://localhost:8000/api/usuarios/novo/", register_data);
+                response = await axios.post(`${host}/api/usuarios/novo/`, register_data);
                 console.log("Cadastro:", register_data);
                 console.log("Resposta: ", response);
                 alert("Cadastro realizado com sucesso!");
@@ -59,6 +81,16 @@ function Login() {
 
     return (
         <div className="auth-container">
+            {
+
+                sessionExpired && (
+                    // TODO: alterar para um container no canto superior da tela (não quero quebrar o css)
+                    <div className="session-expired-message">
+                        Sua sessão foi finalizada. Por favor, faça login novamente.
+                    </div>
+                )
+
+            }
             <img className="logo" src={logo} alt="Logo" />
             <h2>{isLogin ? "Login" : "Cadastro"}</h2>
             <form onSubmit={handleSubmit}>
@@ -142,13 +174,7 @@ function Login() {
                         />
                     </>
                 )}
-                <button type="submit" onClick={()=>{
-
-                        // if (username || alert("Teste de errado ticou"), redirect("/Auth"))
-                            sessionStorage.setItem('tipoUsario', 'vendedor')
-                            redirect(`/start`)
-
-                    }}>{isLogin ? "Entrar" : "Cadastrar"}</button>
+                <button type="submit">{isLogin ? "Entrar" : "Cadastrar"}</button>
 
 
             </form>

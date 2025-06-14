@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import  { Navigate } from "react-router-dom";
 import ProdutoCard from "../produtoCard";
 import "../../styles/produtoList.css";
+import { use } from "react";
 
 function ProdutoList() {
   // Estado para armazenar os produtos simulados
@@ -12,135 +14,50 @@ function ProdutoList() {
   // Estado para controlar a categoria selecionada no filtro
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("");
 
-  // Simulação de fetch de dados (produtos mockados)
-useEffect(() => {
-  const mockProdutos = useMemo(()=>[
-    {
-      id: 1,
-      nome: "Cachaça Pimba",
-      descricao: "Cachaça do Dava Jones, a melhor do Brasil!",
-      preco: 79.9,
-      quantidade_estoque: 15,
-      categoria: { nome: "Pinga" },
-      fornecedor: { nome: "Loja DavaStore" },
-      imagem: "https://cdn.dooca.store/4309/products/701d27b0222a52d1980f7e84ff282b4c.jpg?v=1653064450"
-    },
-    {
-      id: 7,
-      nome: "Cachaça Mineirinha",
-      descricao: "Tradicional cachaça artesanal de Minas Gerais.",
-      preco: 59.9,
-      quantidade_estoque: 10,
-      categoria: { nome: "Pinga" },
-      fornecedor: { nome: "Armazém Minas" },
-      imagem: "https://cdn.dooca.store/4309/products/701d27b0222a52d1980f7e84ff282b4c.jpg?v=1653064450"
-    },
-    {
-      id: 2,
-      nome: "Cerveja DevBier",
-      descricao: "Cerveja artesanal feita por devs para devs.",
-      preco: 12.5,
-      quantidade_estoque: 50,
-      categoria: { nome: "Cerveja" },
-      fornecedor: { nome: "Cervejaria Devs" },
-      imagem: "https://cdn.dooca.store/4309/products/701d27b0222a52d1980f7e84ff282b4c.jpg?v=1653064450"
-    },
-    {
-      id: 8,
-      nome: "Cerveja Git Lager",
-      descricao: "Ideal para relaxar depois de um push.",
-      preco: 10.9,
-      quantidade_estoque: 40,
-      categoria: { nome: "Cerveja" },
-      fornecedor: { nome: "DevBrew" },
-      imagem: "https://cdn.dooca.store/4309/products/701d27b0222a52d1980f7e84ff282b4c.jpg?v=1653064450"
-    },
-    {
-      id: 3,
-      nome: "Whisky Code Label",
-      descricao: "Um blend premium para noites de deploy.",
-      preco: 199.9,
-      quantidade_estoque: 8,
-      categoria: { nome: "Whisky" },
-      fornecedor: { nome: "CodeStore" },
-      imagem: "https://cdn.dooca.store/4309/products/701d27b0222a52d1980f7e84ff282b4c.jpg?v=1653064450"
-    },
-    {
-      id: 9,
-      nome: "Whisky Night Build",
-      descricao: "O companheiro ideal para builds demoradas.",
-      preco: 169.9,
-      quantidade_estoque: 12,
-      categoria: { nome: "Whisky" },
-      fornecedor: { nome: "Whisky Devs" },
-      imagem: "https://cdn.dooca.store/4309/products/701d27b0222a52d1980f7e84ff282b4c.jpg?v=1653064450"
-    },
-    {
-      id: 4,
-      nome: "Vodka Debug",
-      descricao: "Tira todos os bugs da sua mente.",
-      preco: 49.9,
-      quantidade_estoque: 20,
-      categoria: { nome: "Vodka" },
-      fornecedor: { nome: "Debug Drinks" },
-      imagem: "https://cdn.dooca.store/4309/products/701d27b0222a52d1980f7e84ff282b4c.jpg?v=1653064450"
-    },
-    {
-      id: 10,
-      nome: "Vodka FullStack",
-      descricao: "Vai do backend ao frontend sem erro!",
-      preco: 39.9,
-      quantidade_estoque: 18,
-      categoria: { nome: "Vodka" },
-      fornecedor: { nome: "StackBebidas" },
-      imagem: "https://cdn.dooca.store/4309/products/701d27b0222a52d1980f7e84ff282b4c.jpg?v=1653064450"
-    },
-    {
-      id: 5,
-      nome: "Licor Sweet Commit",
-      descricao: "Doce e suave, ideal para comemorar merges sem conflitos.",
-      preco: 34.5,
-      quantidade_estoque: 25,
-      categoria: { nome: "Licor" },
-      fornecedor: { nome: "Liquor Devs" },
-      imagem: "https://cdn.dooca.store/4309/products/701d27b0222a52d1980f7e84ff282b4c.jpg?v=1653064450"
-    },
-    {
-      id: 11,
-      nome: "Licor Dark Merge",
-      descricao: "Um toque amargo para lidar com conflitos no Git.",
-      preco: 37.9,
-      quantidade_estoque: 14,
-      categoria: { nome: "Licor" },
-      fornecedor: { nome: "MergeStore" },
-      imagem: "https://cdn.dooca.store/4309/products/701d27b0222a52d1980f7e84ff282b4c.jpg?v=1653064450"
-    },
-    {
-      id: 6,
-      nome: "Energetico StackOverflow",
-      descricao: "Mantém você acordado até passar todos os testes.",
-      preco: 8.9,
-      quantidade_estoque: 60,
-      categoria: { nome: "Energético" },
-      fornecedor: { nome: "PowerDrink Co." },
-      imagem: "https://cdn.dooca.store/4309/products/701d27b0222a52d1980f7e84ff282b4c.jpg?v=1653064450"
-    },
-    {
-      id: 12,
-      nome: "Energetico FrontFuel",
-      descricao: "Ideal para longas noites de codificação em React.",
-      preco: 9.5,
-      quantidade_estoque: 55,
-      categoria: { nome: "Energético" },
-      fornecedor: { nome: "CodeBoost" },
-      imagem: "https://cdn.dooca.store/4309/products/701d27b0222a52d1980f7e84ff282b4c.jpg?v=1653064450"
-    }
-  ], [categorias]);;
+  // Estado para redirecionar para login
+  const [redirectToLogin, setRedirectToLogin] = useState(false);
 
-  setProdutos(mockProdutos);
-}, []);
+  // Busca a lista de produtos no bakend
+  useEffect(() => {
+    const host = import.meta.env.REACT_APP_HOST || "http://localhost:8000"; 
+    const fetchData = async () => {
+      const token = sessionStorage.getItem('accessToken');
 
+      if (!token) {
+        // Se não houver token, redireciona para a página de login
+        setRedirectToLogin(true);
+        return;
+      }
 
+      try {
+        const response = await fetch(`${host}/api/produtos/`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        });
+
+        if (response.status === 401){
+          console.log("Unauthorized login")
+          setRedirectToLogin(true);
+          return;
+        }
+
+        let produtos_json = await response.json();
+        setProdutos(produtos_json); 
+
+      } catch (error){
+        console.error('Erro ao buscar produtos:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (redirectToLogin) {
+    return <Navigate to="/Auth?sessionExpired=true" replace />;
+  }
 
   // Extração de categorias únicas dos produtos
   const categorias = [...new Set(produtos.map(p => p.categoria.nome))];
