@@ -1,8 +1,12 @@
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-v5&oz7_scaabq^&*cd$j01-rq=!e%9pnop4w=(y&l*^t7$i=xd'
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 DEBUG = True
 
@@ -16,19 +20,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # apps do projeto
+    # Aqui estãp os apps do projeto
     'api',
 
     # rest framework
     'rest_framework',
-
-    
+    'corsheaders',
 ]
 
 REST_FRAMEWORK = {
+    # Autenticação padrão usando JWT (JSON Web Tokens)
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    # Backend padrão para filtros usando django-filters
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
 
 
@@ -42,6 +48,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'smart_supplies.urls'
@@ -64,6 +71,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'smart_supplies.wsgi.application'
 
+# Configuração do banco SQLite para desenvolvimento local (temporário)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -72,6 +80,8 @@ DATABASES = {
 }
 
 '''
+Configuração comentada para usar PostgreSQL em ambiente real ou produção
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -111,3 +121,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+CORS_ALLOW_ALL_ORIGINS = True

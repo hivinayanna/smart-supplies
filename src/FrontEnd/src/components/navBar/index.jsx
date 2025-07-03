@@ -33,7 +33,7 @@ export class NavBar extends React.Component {
               </Link>
             </ul>
 
-            <Link to="#">
+            <Link to="/Auth">
               <button className="Login">
                 <span className="material-symbols-outlined">login</span>
                 Entrar
