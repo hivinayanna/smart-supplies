@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "../../styles/heroSection.css";
 import cocaColaImage from "../../assets/cocaCola.svg";
 import rectangleImage from "../../assets/rectangle.svg";
@@ -300,9 +301,9 @@ const HeroSection = () => {
               <p>Fornecedora de Cerveja</p>
             </div>
             <div className="botao-fornecedor">
-              <a href="#" className="ver-fornecedores-btn">
+              <Link to="/fornecedores" className="ver-fornecedores-btn">
                 VER TODOS OS FORNECEDORES
-              </a>
+              </Link>
             </div>
           </div>
         </section>
