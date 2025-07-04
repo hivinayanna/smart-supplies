@@ -1,116 +1,118 @@
-/* navbar.css */
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 li {
-    list-style: none;
+  list-style: none;
 }
 
 .navbar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 20px;
-    font-family: "Poppins", sans-serif;
-    background: transparent;
-    position: relative; /* Permite sobrepor a imagem de fundo */
-    font-weight: 100;
-    color: #2B4A6B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 95%;
+  padding: 20px;
+  font-family: "Poppins", sans-serif;
+  background: transparent;
+  position: relative;
+  font-weight: 400;
+  color: #2b4a6b;
+  margin-left: 150px;
 }
 
 .nav-links {
-    display: flex; 
-    align-items: center;
-    justify-content: center; /* Centraliza os itens */
-    gap: 2em;
-    flex-grow: 1; /* Permite que a nav-links ocupe o espaço disponível */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2em;
+  flex-grow: 1;
 }
 
 .nav-links a {
-    color: #2B4A6B;
+  color: #2b4a6b;
 }
 
-h4 { 
-    color: #2B4A6B;
+h4 {
+  color: #2b4a6b;
 }
 
-/* LOGO */
 .logo {
-    height: 80px;
-    width: 80px;
-    display: block;
+  height: 80px;
+  width: 80px;
+  display: block;
 }
 
-/* Botão de Login */
 .Login {
-    display: flex; /* Use flexbox for alignment */
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    color: #FFFFFF;
-    padding: clamp(8px, 0.6vw, 24px) clamp(16px, 1.2vw, 48px);
-    font-weight: 500;
-    line-height: 120%;
-    font-size: clamp(14px, 0.938vw, 36px);
-    font-family: "Poppins", sans-serif;
-    background-color: #1E3550; /* Button background color */
-    border-radius: clamp(28px, 2.5vw, 68px);
-    border: 0.5px solid #2B4A6B; /* Border color */
-    text-transform: uppercase;
-    text-decoration: none !important;
-    text-align: center;
-    transition: background-color 0.3s ease, border-color 0.3s ease; /* Add transition for hover effects */
-    cursor: pointer; /* Change cursor to pointer */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  right: 0;
+  margin-left: auto;
+  gap: 8px;
+  color: #ffffff;
+  padding: clamp(8px, 0.6vw, 24px) clamp(16px, 1.2vw, 48px);
+  font-weight: 500;
+  line-height: 120%;
+  font-size: clamp(14px, 0.938vw, 20px);
+  font-family: "Poppins", sans-serif;
+  background-color: #1e3550;
+  border-radius: clamp(28px, 2.5vw, 68px);
+  border: 0.5px solid #2b4a6b;
+  text-transform: uppercase;
+  text-decoration: none !important;
+  text-align: center;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  cursor: pointer;
+  max-height: 50px;
 }
 
 .Login:hover {
-    background-color: #162b45; /* Change background on hover */
-    border-color: #162b45; /* Change border color on hover */
-    transform: scale(1.05); /* Slightly enlarge the button on hover */
+  background-color: #162b45;
+  border-color: #162b45;
+  transform: scale(1.05);
 }
 
-/* NAVBAR MENU */
 .menu {
-    display: flex;
-    align-items: center; /* Center items vertically */
-    gap: 2em;
-    font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 2em;
+  font-size: 20px;
+  margin-left: 10%;
+  margin-right: 10%;
+  white-space: nowrap;
 }
 
 .menu li:hover {
-    border-radius: 5px;
-    transition: 0.5s ease;
-    text-decoration-line: underline;
+  border-radius: 5px;
+  transition: 0.5s ease;
+  text-decoration-line: underline;
 }
 
 .menu li {
-    padding: 5px 14px;
+  padding: 5px 14px;
 }
 
-/* Media Query para telas menores */
 @media (max-width: 768px) {
-    .navbar {
-        flex-direction: column; /* Muda a direção do flex para coluna */
-        align-items: center; /* Centraliza os itens */
-        padding: 10px; /* Ajusta o padding */
-    }
+  .navbar {
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+  }
 
-    .nav-links {
-        flex-direction: column; /* Empilha os links verticalmente */
-        gap: 1em; /* Ajusta o espaço entre os itens */
-        width: 100%; /* Permite que os links ocupem toda a largura */
-        align-items: center; /* Centraliza os itens */
-    }
+  .nav-links {
+    flex-direction: column;
+    gap: 1em;
+    width: 100%;
+    align-items: center;
+  }
 
-    .menu {
-        flex-direction: column; /* Empilha os itens do menu verticalmente */
-        gap: 1em; /* Ajusta o espaço entre os itens do menu */
-    }
+  .menu {
+    flex-direction: column;
+    gap: 1em;
+  }
 
-    .Login {
-        margin-top: 10px; /* Adiciona espaço acima do botão de login */
-        width: 100%; /* Faz o botão ocupar toda a largura */
-    }
+  .Login {
+    margin-top: 10px;
+    width: 100%;
+  }
 }

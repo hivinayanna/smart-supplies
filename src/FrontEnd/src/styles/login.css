@@ -1,140 +1,107 @@
-/* Remove estilos flex do body, centralizando só o login-wrapper */
 body {
-    margin: 0;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Container que centraliza o Login */
-.login-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 60px 20px; /* Margens laterais reduzidas para telas menores */
-}
-
-/* Estilização do container interno do Login (auth-container) */
 .auth-container {
-    max-width: 400px;
-    width: 100%;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    margin-bottom: 50px;
+  max-width: 400px;
+  width: 100%;
+  padding: 40px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 17vh auto;
+  margin-bottom: 239px;
 }
 
-/* Estilização da logo */
 .logo {
-    display: block;
-    margin: 0 auto;
-    width: 80px;
-    height: 80px;
+  display: block;
+  margin: 0 auto 20px;
+  width: 80px;
+  height: 80px;
 }
 
 .auth-container h2 {
-    text-align: center;
-    color: #1E3550;
-    font-weight: 700;
-}
-
-.auth-container div {
-    margin-bottom: 10px;
-}
-
-.auth-container input {
-    margin-top: 20px;
-}
-
-.select-input {
-    margin-top: 20px;
-    height: 40px;
+  text-align: center;
+  color: #1e3550;
+  font-weight: 700;
+  margin-bottom: 30px;
 }
 
 .auth-container input,
 .auth-container select {
-    width: 90%;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
-.auth-container input {
-    height: 40px;
+.select-input {
+  height: 45px;
 }
 
 .auth-container button {
-    width: 90%;
-    height: 45px;
-    padding: 10px;
-    background-color: #1E3550;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
+  width: 100%;
+  height: 45px;
+  padding: 10px;
+  background-color: #1e3550;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+  font-weight: 500;
+  transition: background-color 0.2s;
 }
 
 .auth-container button:hover {
-    background-color: #162b45;
+  background-color: #162b45;
 }
 
-/* Estilos do "Esqueci a senha" e alternância já existentes */
-.privacy-link, .forgot-password{
-    margin-top: 10px;
-    text-align: center;
+.privacy-link,
+.forgot-password {
+  margin-top: 15px;
+  text-align: center;
 }
 
- .privacy-link a, .forgot-password a{
-    color: #1E3550;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 14px;
-    margin: 15px;
+.privacy-link a,
+.forgot-password a {
+  color: #1e3550;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
 }
 
-.privacy-link a:hover, .forgot-password a:hover  {
-    text-decoration: underline;
+.privacy-link a:hover,
+.forgot-password a:hover {
+  text-decoration: underline;
 }
 
-
-/* Media Queries para Responsividade */
 @media (max-width: 768px) {
-    .login-wrapper {
-        margin: 30px 10px; /* Reduzir margens em telas menores */
-    }
-
-    .auth-container {
-        padding: 15px; /* Reduzir o padding do container */
-    }
-
-    .auth-container h2 {
-        font-size: 1.5em; /* Ajustar o tamanho da fonte do título */
-    }
-
-    .auth-container input,
-    .auth-container select,
-    .auth-container button {
-        width: 100%; /* Garantir que os inputs e botões ocupem 100% da largura */
-    }
-
-    .privacy-link {
-        padding-top: 15px;
-        font-size: 12px; /* Ajustar o tamanho da fonte do link */
-    }
+  .auth-container {
+    margin: 20px;
+    padding: 30px;
+    margin: 50px auto;
+  }
 }
 
 @media (max-width: 480px) {
-    .auth-container h2 {
-        font-size: 1.2em; /* Ajustar ainda mais o tamanho da fonte do título */
-    }
+  .auth-container {
+    padding: 20px;
+  }
 
-    .auth-container input,
-    .auth-container select,
-    .auth-container button {
-        height: 40px; /* Ajustar a altura dos inputs e botões */
-    }
+  .auth-container h2 {
+    font-size: 1.2em;
+  }
 
-    .privacy-link {
-        font-size: 11px; /* Ajustar o tamanho da fonte do link */
-    }
+  .auth-container input,
+  .auth-container select,
+  .auth-container button {
+    height: 40px;
+  }
 }
