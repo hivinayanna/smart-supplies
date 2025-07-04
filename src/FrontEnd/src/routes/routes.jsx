@@ -1,11 +1,9 @@
-// routes.jsx
-import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
-import Auth from "../pages/Auth";
-import StartPage from "../pages/StartPage";
 import Fornecedores from "../components/fornecedores";
 import Footer from "../components/footer";
+import Login from "../components/login";
+import Auth from "../pages/Auth";
 
 const Layout = ({ children }) => {
   return (
@@ -22,9 +20,9 @@ function AppRoutes() {
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/Auth" element={<Auth />} />
-          <Route path="/Start" element={<StartPage />} />
+          <Route path="/auth" element={<Auth />} />
           <Route path="/fornecedores" element={<Fornecedores />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </Layout>
     </BrowserRouter>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../../styles/heroSection.css";
 import cocaColaImage from "../../assets/cocaCola.svg";
 import rectangleImage from "../../assets/rectangle.svg";
@@ -24,6 +24,12 @@ import marianaNunes from "../../assets/mariana-nunes.svg";
 import beatrizFreitas from "../../assets/beatriz-freitas.svg";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+
+  const handleLoginRedirect = () => {
+    navigate("/login");
+  };
+
   return (
     <section className="hero-total">
       <div className="hero">
@@ -36,8 +42,12 @@ const HeroSection = () => {
             Simplifique sua gestão e aumente suas vendas.
           </p>
           <div className="hero-buttons">
-            <button className="primary-btn">Encontre seu fornecedor</button>
-            <button className="secondary-btn">Seja um fornecedor</button>
+            <button className="primary-btn" onClick={handleLoginRedirect}>
+              Encontre seu fornecedor
+            </button>
+            <button className="secondary-btn" onClick={handleLoginRedirect}>
+              Seja um fornecedor
+            </button>
           </div>
         </div>
         <div className="hero-image">

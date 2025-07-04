@@ -84,7 +84,6 @@
   border: 2px solid #2b4a6b;
 }
 
-/* Estilizando a imagem */
 .hero-image {
   position: relative;
   right: 0;
@@ -130,7 +129,7 @@
   display: flex;
   flex-direction: column;
   margin-left: 40px;
-  width: calc(70% - 40px); /* ajusta a largura considerando a margem */
+  width: calc(70% - 40px);
   margin-top: 85px;
   margin-bottom: 50px;
   box-sizing: border-box;
@@ -208,7 +207,6 @@
 }
 
 /* categoria de bebidas */
-
 .info-da-secao {
   display: flex;
   align-items: center;
@@ -227,10 +225,6 @@
 .categoria-de-bebidas {
   padding: 40px;
 }
-
-/* .info-da-secao img {
-  flex-shrink: 0;
-} */
 
 .info-da-secao p {
   flex-basis: 60%;
@@ -272,7 +266,6 @@
   position: absolute;
   top: -40px;
   right: -60px;
-  /* margin-bottom: 15px; */
 }
 
 .saiba-mais {
@@ -289,7 +282,6 @@
 }
 
 /* parceiros */
-
 .fotos-parceiros {
   display: flex;
   justify-content: center;

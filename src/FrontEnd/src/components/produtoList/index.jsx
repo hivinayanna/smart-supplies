@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import  { Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import ProdutoCard from "../produtoCard";
 import "../../styles/produtoList.css";
 import { use } from "react";
@@ -19,9 +19,9 @@ function ProdutoList() {
 
   // Busca a lista de produtos no bakend
   useEffect(() => {
-    const host = import.meta.env.REACT_APP_HOST || "http://localhost:8000"; 
+    const host = import.meta.env.REACT_APP_HOST || "http://localhost:8000";
     const fetchData = async () => {
-      const token = sessionStorage.getItem('accessToken');
+      const token = sessionStorage.getItem("accessToken");
 
       if (!token) {
         // Se não houver token, redireciona para a página de login
@@ -31,24 +31,23 @@ function ProdutoList() {
 
       try {
         const response = await fetch(`${host}/api/produtos/`, {
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          }
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         });
 
-        if (response.status === 401){
-          console.log("Unauthorized login")
+        if (response.status === 401) {
+          console.log("Unauthorized login");
           setRedirectToLogin(true);
           return;
         }
 
         let produtos_json = await response.json();
-        setProdutos(produtos_json); 
-
-      } catch (error){
-        console.error('Erro ao buscar produtos:', error);
+        setProdutos(produtos_json);
+      } catch (error) {
+        console.error("Erro ao buscar produtos:", error);
       }
     };
 
@@ -60,18 +59,19 @@ function ProdutoList() {
   }
 
   // Extração de categorias únicas dos produtos
-  const categorias = [...new Set(produtos.map(p => p.categoria.nome))];
+  const categorias = [...new Set(produtos.map((p) => p.categoria.nome))];
 
   // Filtragem dos produtos com base na busca e na categoria selecionada
-  const produtosFiltrados = produtos.filter(p => {
+  const produtosFiltrados = produtos.filter((p) => {
     const nomeMatch = p.nome.toLowerCase().includes(busca.toLowerCase());
-    const categoriaMatch = categoriaSelecionada ? p.categoria.nome === categoriaSelecionada : true;
+    const categoriaMatch = categoriaSelecionada
+      ? p.categoria.nome === categoriaSelecionada
+      : true;
     return nomeMatch && categoriaMatch;
   });
 
   return (
     <div className="produto-list-container">
-      
       {/*  SEÇÃO LATERAL DE CATEGORIAS / FILTROS */}
       <div className="produto-filtros">
         <h3>Filtrar por categoria</h3>
@@ -99,7 +99,6 @@ function ProdutoList() {
 
       {/* SEÇÃO PRINCIPAL: BARRA DE PESQUISA + LISTA DE CARDS */}
       <div className="produto-content">
-
         {/* BARRA DE PESQUISA */}
         <input
           type="text"
@@ -118,6 +117,6 @@ function ProdutoList() {
       </div>
     </div>
   );
-};
+}
 
 export default ProdutoList;
