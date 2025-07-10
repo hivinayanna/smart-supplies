@@ -10,12 +10,12 @@ export class NavBar extends React.Component {
         <nav className="navbar">
           <div className="nav-links">
             <ul className="menu">
-              <Link to="/">
+              <Link to="/login">
                 <li>INÍCIO</li>
               </Link>
               <h4>•</h4>
 
-              <Link to="#">
+              <Link to="/login">
                 <li>CATEGORIAS DE BEBIDAS</li>
               </Link>
 
@@ -23,12 +23,12 @@ export class NavBar extends React.Component {
                 <img className="logo" src={logo} />
               </li>
 
-              <Link to="#">
+              <Link to="/login">
                 <li>FORNECEDORES</li>
               </Link>
               <h4>•</h4>
 
-              <Link to="#">
+              <Link to="/login">
                 <li>PRODUTOS</li>
               </Link>
             </ul>
@@ -36,7 +36,7 @@ export class NavBar extends React.Component {
             <Link to="/login">
               <button className="Login">
                 <span className="material-symbols-outlined">login</span>
-                Entrar
+                Entre/Cadastre-se
               </button>
             </Link>
           </div>

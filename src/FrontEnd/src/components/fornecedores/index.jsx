@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../../styles/fornecedores.css";
 
 //imagens dos fornecedores
@@ -9,6 +10,7 @@ import beatrizFreitas from "../../assets/beatriz-freitas.svg";
 
 const Fornecedores = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   const fornecedores = [
     {
@@ -46,15 +48,18 @@ const Fornecedores = () => {
   );
   return (
     <div className="fornecedores-container">
-      <div className="search-bar">
+      <div className="pesquisa-bar">
+        <button className="voltar-botao" onClick={() => navigate(-1)}>
+          <i className="fas fa-arrow-left"></i>
+        </button>
         <input
           type="text"
           placeholder="Pesquise pelo nome"
-          className="search-input"
+          className="pesquisa-input"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <button className="search-button">
+        <button className="pesquisa-button">
           <i className="fas fa-search"></i>
         </button>
       </div>

@@ -190,9 +190,13 @@ const HeroSection = () => {
           <div className="card-categoria">
             <div className="card-content">
               <h3>Refrigerantes</h3>
-              <a href="#" className="saiba-mais">
+              <Link
+                style={{ marginLeft: "-40px" }}
+                to="/login"
+                className="saiba-mais"
+              >
                 SAIBA MAIS
-              </a>
+              </Link>
             </div>
             <img
               style={{ top: "-1px", scale: "1.4" }}
@@ -203,9 +207,9 @@ const HeroSection = () => {
           <div className="card-categoria">
             <div className="card-conteudo">
               <h3>Cervejas</h3>
-              <a href="#" className="saiba-mais">
+              <Link to="/login" className="saiba-mais">
                 SAIBA MAIS
-              </a>
+              </Link>
             </div>
             <img
               style={{ top: "-50px", scale: "1" }}
@@ -216,18 +220,22 @@ const HeroSection = () => {
           <div className="card-categoria">
             <div className="card-content">
               <h3>Águas</h3>
-              <a href="#" className="saiba-mais">
+              <Link to="/login" className="saiba-mais">
                 SAIBA MAIS
-              </a>
+              </Link>
             </div>
             <img src={aguas} alt="Águas" />
           </div>
           <div className="card-categoria">
             <div className="card-content">
               <h3>Energéticos</h3>
-              <a href="#" className="saiba-mais">
+              <Link
+                style={{ marginLeft: "-18px" }}
+                to="/login"
+                className="saiba-mais"
+              >
                 SAIBA MAIS
-              </a>
+              </Link>
             </div>
             <img
               style={{ top: "-5px", scale: "1.1" }}
@@ -238,9 +246,9 @@ const HeroSection = () => {
           <div className="card-categoria">
             <div className="card-content">
               <h3>Sucos</h3>
-              <a href="#" className="saiba-mais">
+              <Link to="/login" className="saiba-mais">
                 SAIBA MAIS
-              </a>
+              </Link>
             </div>
             <img
               style={{ top: "-10px", scale: "1.1" }}
@@ -251,9 +259,9 @@ const HeroSection = () => {
           <div className="card-categoria">
             <div className="card-content">
               <h3>Vinhos</h3>
-              <a href="#" className="saiba-mais">
+              <Link to="/login" className="saiba-mais">
                 SAIBA MAIS
-              </a>
+              </Link>
             </div>
             <img
               style={{ top: "-30px", scale: "1" }}
@@ -311,7 +319,7 @@ const HeroSection = () => {
               <p>Fornecedora de Cerveja</p>
             </div>
             <div className="botao-fornecedor">
-              <Link to="/fornecedores" className="ver-fornecedores-btn">
+              <Link to="/login" className="ver-fornecedores-btn">
                 VER TODOS OS FORNECEDORES
               </Link>
             </div>

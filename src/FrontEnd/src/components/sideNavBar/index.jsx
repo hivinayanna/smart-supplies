@@ -31,7 +31,7 @@ function SideNavBar({ tipoUsuario }) {
           </Link>
         </li>
         <li>
-          <Link to="/">
+          <Link to="/fornecedores">
             <span className="material-symbols-outlined">groups</span>
             Fornecedores
           </Link>
@@ -74,7 +74,7 @@ function SideNavBar({ tipoUsuario }) {
         )}
 
         <li>
-          <Link to="/">
+          <Link to="/auth">
             <span className="material-symbols-outlined">logout</span>
             Sair
           </Link>
