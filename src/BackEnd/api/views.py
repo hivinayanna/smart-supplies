@@ -6,7 +6,7 @@ from rest_framework.generics import RetrieveAPIView, RetrieveUpdateDestroyAPIVie
 from rest_framework.exceptions import PermissionDenied 
 from .models import Produto, Pedido, Fornecedor, Usuario, Categoria, Carrinho, ItemCarrinho
 from .serializers import ProdutoSerializer, PedidoSerializer, FornecedorSerializer, CreateUsuarioSerializer, CategoriaSerializer, CarrinhoSerializer, ItemCarrinhoSerializer
-
+from django.db import transaction
 # Endpoint para listar produtos, com filtros opcionais por categoria e nome
 @api_view(['GET'])
 def listar_produtos(request):
@@ -179,3 +179,38 @@ def remover_item_carrinho(request, item_id):
         return Response({'mensagem': 'Item removido do carrinho.'})
     except ItemCarrinho.DoesNotExist:
         return Response({'erro': 'Item não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def finalizar_carrinho(request):
+    user = request.user
+    carrinho = get_or_create_cart(user)
+    itens = carrinho.itens.all()
+
+    if not itens.exists():
+        return Response({'erro': 'Carrinho vazio.'}, status=400)
+
+    with transaction.atomic():
+        # Verifica se há estoque suficiente
+        for item in itens:
+            if item.quantidade > item.produto.quantidade_estoque:
+                return Response(
+                    {'erro': f'Estoque insuficiente para o produto {item.produto.nome}.'},
+                    status=400
+                )
+
+        pedido = Pedido.objects.create(cliente=user)
+
+        for item in itens:
+            pedido.itens.create(
+                produto=item.produto,
+                quantidade=item.quantidade,
+                preco_unitario=item.produto.preco
+            )
+            item.produto.quantidade_estoque -= item.quantidade
+            item.produto.save()
+
+        itens.delete()
+
+    serializer = PedidoSerializer(pedido)
+    return Response({'mensagem': 'Pedido realizado com sucesso.', 'pedido': serializer.data}, status=201)
