@@ -25,7 +25,7 @@ function SideNavBar({ tipoUsuario }) {
           </Link>
         </li>
         <li>
-          <Link to="/">
+          <Link to="/carrinho">
             <span className="material-symbols-outlined">shopping_cart</span>
             Carrinho
           </Link>
@@ -37,7 +37,7 @@ function SideNavBar({ tipoUsuario }) {
           </Link>
         </li>
         <li>
-          <Link to="/">
+          <Link to="/lista-desejos">
             <span className="material-symbols-outlined">favorite</span>
             Lista de Desejos
           </Link>
@@ -53,7 +53,7 @@ function SideNavBar({ tipoUsuario }) {
         {isVendedor && (
           <>
             <li>
-              <Link to="/">
+              <Link to="/meus-produtos">
                 <span className="material-symbols-outlined">inventory_2</span>
                 Meus Produtos
               </Link>
