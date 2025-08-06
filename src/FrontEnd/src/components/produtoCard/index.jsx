@@ -6,7 +6,10 @@ const host = import.meta.env.REACT_APP_HOST || "http://localhost:8000";
 const ProdutoCard = ({ produto }) => {
     const [quantidade, setQuantidade] = useState(1);
 
-    if (!produto) return null;
+    if (!produto) {
+        console.log('Produto não encontrado:', produto);
+        return null;
+    }
 
     const aumentar = () => setQuantidade((q) => q + 1);
     const diminuir = () => setQuantidade((q) => (q > 1 ? q - 1 : 1));

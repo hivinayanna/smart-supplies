@@ -24,10 +24,9 @@
 }
 
 .produto-card .card-content {
-  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  margin: 0;
 }
 
 .produto-card h2 {
@@ -46,13 +45,13 @@
   color: #222;
 }
 
-.card-footer {
-  padding: 16px;
-  border-top: 1px solid #eee;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  background-color: #fafafa;
+.produto-card .card-footer {
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 16px !important;
+  border-top: 1px solid #eee !important;
+  gap: 10px !important;
+  background-color: #fafafa !important;
 }
 
 .quantidade-controls {
