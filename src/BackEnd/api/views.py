@@ -1,11 +1,24 @@
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, generics
+from rest_framework import status, generics, permissions
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import RetrieveAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.exceptions import PermissionDenied 
-from .models import Produto, Pedido, Fornecedor, Usuario, Categoria, Carrinho, ItemCarrinho
-from .serializers import ProdutoSerializer, PedidoSerializer, FornecedorSerializer, CreateUsuarioSerializer, CategoriaSerializer, CarrinhoSerializer, ItemCarrinhoSerializer
+from django.db import transaction
+from .models import Produto, Pedido, Fornecedor, Usuario, Categoria, Carrinho, ItemCarrinho, ListaDesejos
+from .serializers import (
+    ProdutoSerializer,
+    PedidoSerializer,
+    FornecedorSerializer,
+    CreateUsuarioSerializer,
+    CategoriaSerializer,
+    CarrinhoSerializer,
+    ItemCarrinhoSerializer,
+    ListaDesejosSerializer,
+    ProdutoResumoSerializer
+)
+
 
 # Endpoint para listar produtos, com filtros opcionais por categoria e nome
 @api_view(['GET'])
@@ -179,3 +192,72 @@ def remover_item_carrinho(request, item_id):
         return Response({'mensagem': 'Item removido do carrinho.'})
     except ItemCarrinho.DoesNotExist:
         return Response({'erro': 'Item não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def finalizar_carrinho(request):
+    user = request.user
+    carrinho = get_or_create_cart(user)
+    itens = carrinho.itens.all()
+
+    if not itens.exists():
+        return Response({'erro': 'Carrinho vazio.'}, status=400)
+
+    with transaction.atomic():
+        # Verifica se há estoque suficiente
+        for item in itens:
+            if item.quantidade > item.produto.quantidade_estoque:
+                return Response(
+                    {'erro': f'Estoque insuficiente para o produto {item.produto.nome}.'},
+                    status=400
+                )
+
+        pedido = Pedido.objects.create(cliente=user)
+
+        for item in itens:
+            pedido.itens.create(
+                produto=item.produto,
+                quantidade=item.quantidade,
+                preco_unitario=item.produto.preco
+            )
+            item.produto.quantidade_estoque -= item.quantidade
+            item.produto.save()
+
+        itens.delete()
+
+    serializer = PedidoSerializer(pedido)
+    return Response({'mensagem': 'Pedido realizado com sucesso.', 'pedido': serializer.data}, status=201)
+
+class ListaDesejosView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        desejos = ListaDesejos.objects.filter(usuario=request.user)
+        produtos = [item.produto for item in desejos]
+        serializer = ProdutoResumoSerializer(produtos, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        produto_id = request.data.get('produto_id')
+        if not produto_id:
+            return Response({'erro': 'produto_id é obrigatório.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            produto = Produto.objects.get(id=produto_id)
+        except Produto.DoesNotExist:
+            return Response({'erro': 'Produto não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Evita duplicidade
+        if ListaDesejos.objects.filter(usuario=request.user, produto=produto).exists():
+            return Response({'mensagem': 'Produto já está na lista de desejos.'}, status=status.HTTP_200_OK)
+
+        ListaDesejos.objects.create(usuario=request.user, produto=produto)
+        return Response({'mensagem': 'Produto adicionado à lista de desejos.'}, status=status.HTTP_201_CREATED)
+
+    def delete(self, request, produto_id):
+        try:
+            item = ListaDesejos.objects.get(usuario=request.user, produto_id=produto_id)
+            item.delete()
+            return Response({'mensagem': 'Produto removido da lista de desejos.'}, status=status.HTTP_204_NO_CONTENT)
+        except ListaDesejos.DoesNotExist:
+            return Response({'erro': 'Produto não está na lista de desejos.'}, status=status.HTTP_404_NOT_FOUND)

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Usuario, Produto, Categoria, Pedido, ItemPedido, Fornecedor, Carrinho, ItemCarrinho
+from .models import Usuario, Produto, Categoria, Pedido, ItemPedido, Fornecedor, Carrinho, ItemCarrinho, ListaDesejos
 
 # Serializer para exibir informações do usuário
 class UsuarioSerializer(serializers.ModelSerializer):
@@ -44,7 +44,7 @@ class ProdutoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Produto
-        fields = ['id', 'nome', 'descricao', 'preco', 'quantidade_estoque', 'categoria', 'categoria_id', 'fornecedor', 'fornecedor_id', 'imagem']
+        fields = ['id', 'nome', 'descricao', 'preco', 'quantidade_estoque', 'categoria', 'categoria_id', 'fornecedor', 'imagem']
 
 class ProdutoResumoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -77,12 +77,16 @@ class ClienteResumoSerializer(serializers.ModelSerializer):
 
 # Serializer para pedidos com criação customizada de itens
 class PedidoSerializer(serializers.ModelSerializer):
-    itens = ItemPedidoSerializer(many=True)  # Lista de itens incluídos no pedido
+    itens = ItemPedidoSerializer(many=True, read_only=True)  # Lista de itens incluídos no pedido
     cliente = ClienteResumoSerializer(read_only=True)
+    valor_total = serializers.SerializerMethodField()
 
     class Meta:
         model = Pedido
-        fields = ['id', 'cliente', 'data', 'itens']
+        fields = ['id', 'cliente', 'data', 'itens', 'valor_total']
+
+    def get_valor_total(self, obj):
+        return sum(item.quantidade * item.preco_unitario for item in obj.itens.all())
 
     # Criação personalizada para salvar pedido e itens relacionados
     def create(self, validated_data):
@@ -119,3 +123,10 @@ class CarrinhoSerializer(serializers.ModelSerializer):
 
     def get_total(self, obj):
         return obj.total()
+
+class ListaDesejosSerializer(serializers.ModelSerializer):
+    produto = ProdutoSerializer(read_only=True)
+
+    class Meta:
+        model = ListaDesejos
+        fields = ['id', 'produto']
