@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Usuario, Produto, Categoria, Pedido, ItemPedido, Fornecedor, Carrinho, ItemCarrinho
+from .models import Usuario, Produto, Categoria, Pedido, ItemPedido, Fornecedor, Carrinho, ItemCarrinho, ListaDesejos
 
 # Serializer para exibir informações do usuário
 class UsuarioSerializer(serializers.ModelSerializer):
@@ -123,3 +123,10 @@ class CarrinhoSerializer(serializers.ModelSerializer):
 
     def get_total(self, obj):
         return obj.total()
+
+class ListaDesejosSerializer(serializers.ModelSerializer):
+    produto = ProdutoSerializer(read_only=True)
+
+    class Meta:
+        model = ListaDesejos
+        fields = ['id', 'produto']
