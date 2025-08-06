@@ -3,7 +3,7 @@ from .views import (
     listar_produtos, criar_produto, DetalharProdutoView,
     listar_pedidos, criar_pedido, listar_fornecedores, UsuarioCreateView,
     ProdutoUpdateDeleteView, listar_categorias, listar_produtos_do_fornecedor,
-    ver_carrinho, adicionar_ao_carrinho, remover_item_carrinho, atualizar_item_carrinho, finalizar_carrinho
+    ver_carrinho, adicionar_ao_carrinho, remover_item_carrinho, atualizar_item_carrinho, finalizar_carrinho, ListaDesejosView
 )
 
 urlpatterns = [
@@ -29,10 +29,18 @@ urlpatterns = [
     # Rota para listagem de categorias
     path('categorias/', listar_categorias, name='listar_categorias'),
 
+    # Rotas do carrinho
     path('carrinho/', ver_carrinho, name='ver_carrinho'),
     path('carrinho/adicionar/', adicionar_ao_carrinho, name='adicionar_ao_carrinho'),
     path('carrinho/atualizar/<int:item_id>/', atualizar_item_carrinho, name='atualizar_item_carrinho'),
     path('carrinho/remover/<int:item_id>/', remover_item_carrinho, name='remover_item_carrinho'),
     path('carrinho/finalizar/', finalizar_carrinho, name='finalizar-carrinho'),
+
+    # Rotas para lista de desejos 
+    # (GET para listar, POST para adicionar)
+    path('lista-desejos/', ListaDesejosView.as_view(), name='lista-desejos'),
+
+    # (DELETE)
+    path('lista-desejos/<int:produto_id>/', ListaDesejosView.as_view(), name='remover-lista-desejos'),
 
 ]
