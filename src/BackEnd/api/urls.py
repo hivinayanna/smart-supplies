@@ -3,7 +3,7 @@ from .views import (
     listar_produtos, criar_produto, DetalharProdutoView,
     listar_pedidos, criar_pedido, listar_fornecedores, UsuarioCreateView,
     ProdutoUpdateDeleteView, listar_categorias, listar_produtos_do_fornecedor,
-    ver_carrinho, adicionar_ao_carrinho, remover_item_carrinho, atualizar_item_carrinho
+    ver_carrinho, adicionar_ao_carrinho, remover_item_carrinho, atualizar_item_carrinho, finalizar_carrinho
 )
 
 urlpatterns = [
@@ -33,5 +33,6 @@ urlpatterns = [
     path('carrinho/adicionar/', adicionar_ao_carrinho, name='adicionar_ao_carrinho'),
     path('carrinho/atualizar/<int:item_id>/', atualizar_item_carrinho, name='atualizar_item_carrinho'),
     path('carrinho/remover/<int:item_id>/', remover_item_carrinho, name='remover_item_carrinho'),
+    path('carrinho/finalizar/', finalizar_carrinho, name='finalizar-carrinho'),
 
 ]
