@@ -105,3 +105,14 @@ class ItemCarrinho(models.Model):
     
     def __str__(self):
         return f'{self.quantidade} x {self.produto.nome} - Carrinho de {self.carrinho.usuario.username}'
+    
+class ListaDesejos(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='listaDesejos')
+    produto = models.ForeignKey('Produto', on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('usuario', 'produto')
+
+    def __str__(self):
+        return f'{self.usuario.username} - {self.produto.nome}'
+
