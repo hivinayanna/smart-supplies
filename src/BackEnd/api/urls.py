@@ -1,9 +1,10 @@
 from django.urls import path
 from .views import (
-    listar_produtos, criar_produto, DetalharProdutoView,
+    listar_produtos, criar_produto,
     listar_pedidos, criar_pedido, listar_fornecedores, UsuarioCreateView,
     ProdutoUpdateDeleteView, listar_categorias, listar_produtos_do_fornecedor,
-    ver_carrinho, adicionar_ao_carrinho, remover_item_carrinho, atualizar_item_carrinho, finalizar_carrinho, ListaDesejosView
+    ver_carrinho, adicionar_ao_carrinho, remover_item_carrinho, atualizar_item_carrinho, finalizar_carrinho, ListaDesejosView, avaliar_produto,
+    insights_produto
 )
 
 urlpatterns = [
@@ -37,10 +38,13 @@ urlpatterns = [
     path('carrinho/finalizar/', finalizar_carrinho, name='finalizar-carrinho'),
 
     # Rotas para lista de desejos 
-    # (GET para listar, POST para adicionar)
-    path('lista-desejos/', ListaDesejosView.as_view(), name='lista-desejos'),
+    path('lista-desejos/', ListaDesejosView.as_view(), name='lista-desejos'), # (GET para listar, POST para adicionar)
+    path('lista-desejos/<int:produto_id>/', ListaDesejosView.as_view(), name='remover-lista-desejos'), # (DELETE)
 
-    # (DELETE)
-    path('lista-desejos/<int:produto_id>/', ListaDesejosView.as_view(), name='remover-lista-desejos'),
+    # Rota para avaliação
+    path('produtos/avaliar/', avaliar_produto),
+
+    # Rota insights
+    path('produtos/<int:pk>/insights/', insights_produto, name='insights-produto'),
 
 ]
