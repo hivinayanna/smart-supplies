@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Usuario, Produto, Categoria, Pedido, ItemPedido, Fornecedor, Carrinho, ItemCarrinho, ListaDesejos
+from .models import Usuario, Produto, Categoria, Pedido, ItemPedido, Fornecedor, Carrinho, ItemCarrinho, ListaDesejos, Avaliacao
 
 # Serializer para exibir informações do usuário
 class UsuarioSerializer(serializers.ModelSerializer):
@@ -39,7 +39,6 @@ class ProdutoSerializer(serializers.ModelSerializer):
     categoria = CategoriaSerializer(read_only=True)  # Representação detalhada da categoria (somente leitura)
     categoria_id = serializers.PrimaryKeyRelatedField(queryset=Categoria.objects.all(), source='categoria', write_only=True)  # ID usado na criação/edição
     fornecedor = UsuarioSerializer(read_only=True)  # Representação detalhada do fornecedor
-    fornecedor_id = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all(), source='fornecedor', write_only=True)  # ID usado na criação/edição
     imagem = serializers.ImageField(required=False)
 
     class Meta:
@@ -130,3 +129,10 @@ class ListaDesejosSerializer(serializers.ModelSerializer):
     class Meta:
         model = ListaDesejos
         fields = ['id', 'produto']
+
+class AvaliacaoSerializer(serializers.ModelSerializer):
+    usuario = UsuarioSerializer(read_only=True)
+
+    class Meta:
+        model = Avaliacao
+        fields = ['id', 'produto', 'usuario', 'nota', 'comentario', 'data']
