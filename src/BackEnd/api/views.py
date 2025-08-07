@@ -1,12 +1,13 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, generics, permissions
+from rest_framework import status, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import RetrieveAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.exceptions import PermissionDenied 
-from django.db import transaction
-from .models import Produto, Pedido, Fornecedor, Usuario, Categoria, Carrinho, ItemCarrinho, ListaDesejos
+from django.db import transaction, IntegrityError
+from django.db.models import Avg
+from .models import Produto, Pedido, Fornecedor, Usuario, Categoria, Carrinho, ItemCarrinho, ListaDesejos, Avaliacao
 from .serializers import (
     ProdutoSerializer,
     PedidoSerializer,
@@ -14,11 +15,9 @@ from .serializers import (
     CreateUsuarioSerializer,
     CategoriaSerializer,
     CarrinhoSerializer,
-    ItemCarrinhoSerializer,
-    ListaDesejosSerializer,
-    ProdutoResumoSerializer
+    ProdutoResumoSerializer,
+    AvaliacaoSerializer
 )
-
 
 # Endpoint para listar produtos, com filtros opcionais por categoria e nome
 @api_view(['GET'])
@@ -261,3 +260,51 @@ class ListaDesejosView(APIView):
             return Response({'mensagem': 'Produto removido da lista de desejos.'}, status=status.HTTP_204_NO_CONTENT)
         except ListaDesejos.DoesNotExist:
             return Response({'erro': 'Produto não está na lista de desejos.'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def avaliar_produto(request):
+    produto_id = request.data.get('produto_id')
+    nota = request.data.get('nota')
+    comentario = request.data.get('comentario', '')
+
+    if not produto_id or nota is None:
+        return Response({'erro': 'Campos produto_id e nota são obrigatórios.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        produto = Produto.objects.get(id=produto_id)
+    except Produto.DoesNotExist:
+        return Response({'erro': 'Produto não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+
+    try:
+        Avaliacao.objects.create(
+            produto=produto,
+            usuario=request.user,
+            nota=nota,
+            comentario=comentario
+        )
+    except IntegrityError:
+        return Response({'erro': 'Você já avaliou este produto.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response({'mensagem': 'Avaliação registrada com sucesso.'}, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def insights_produto(request, pk):
+    try:
+        produto = Produto.objects.get(pk=pk)
+    except Produto.DoesNotExist:
+        return Response({'erro': 'Produto não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+
+    if produto.fornecedor != request.user:
+        return Response({'erro': 'Você não tem permissão para acessar os insights deste produto.'}, status=status.HTTP_403_FORBIDDEN)
+
+    media_nota = Avaliacao.objects.filter(produto=produto).aggregate(avg=Avg('nota'))['avg']
+    total_avaliacoes = Avaliacao.objects.filter(produto=produto).count()
+
+    return Response({
+        'produto': produto.nome,
+        'media_nota': round(media_nota or 0, 2),
+        'total_avaliacoes': total_avaliacoes
+    })
