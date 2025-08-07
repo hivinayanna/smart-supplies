@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from cloudinary.models import CloudinaryField
 
 # Modelo que estende o usuário padrão do Django para incluir campos adicionais
 class Usuario(AbstractUser):
@@ -53,7 +54,7 @@ class Produto(models.Model):
     quantidade_estoque = models.PositiveIntegerField()  # Quantidade disponível no estoque
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, related_name='produtos')  # Categoria associada, em cascata na exclusão
     fornecedor = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='produtos')  # Usuário fornecedor do produto
-    imagem = models.ImageField(upload_to='produtos/', blank=True, null=True)
+    imagem = CloudinaryField('imagem', blank=True, null=True)
 
     def __str__(self):
         # Retorna o nome do produto
@@ -115,4 +116,13 @@ class ListaDesejos(models.Model):
 
     def __str__(self):
         return f'{self.usuario.username} - {self.produto.nome}'
+    
+class Avaliacao(models.Model):
+    produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name='avaliacoes')
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    nota = models.IntegerField()  # de 1 a 5
+    comentario = models.TextField(blank=True)
+    data = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ('produto', 'usuario')  # 1 avaliação por produto por usuário
