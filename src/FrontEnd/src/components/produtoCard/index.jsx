@@ -19,7 +19,7 @@ const ProdutoCard = ({ produto }) => {
 
     return (
         <div className="produto-card">
-            <Link>
+            <Link to={`/produto/${produto.id}`}>
                 <img
                     src={produto.imagem ? `${host}/${produto.imagem}` : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROJGo_BDmE1BQXej-UemTXxZG6RkDsA95ZnA&s"}
                     alt={produto.nome}
