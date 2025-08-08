@@ -1,0 +1,32 @@
+.produto-detalhes-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    display: flex;
+    flex: 1;
+}
+
+.produto-detalhes-content {
+    flex: 1;
+    padding: 20px;
+    margin-left: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.components-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.components-wrapper > * {
+    width: 100%;
+}
