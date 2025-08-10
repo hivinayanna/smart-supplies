@@ -1,0 +1,16 @@
+.fornecedores-page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    display: flex;
+    flex: 1;
+}
+
+.fornecedores-content {
+    flex: 1;
+    margin-left: 110px;
+    padding: 20px;
+}

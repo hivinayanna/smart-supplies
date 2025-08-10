@@ -27,7 +27,7 @@ const HeroSection = () => {
   const navigate = useNavigate();
 
   const handleLoginRedirect = () => {
-    navigate("/login");
+    navigate("/Auth");
   };
 
   return (
@@ -311,7 +311,7 @@ const HeroSection = () => {
               <p>Fornecedora de Cerveja</p>
             </div>
             <div className="botao-fornecedor">
-              <Link to="/fornecedores" className="ver-fornecedores-btn">
+              <Link to="/Auth" className="ver-fornecedores-btn">
                 VER TODOS OS FORNECEDORES
               </Link>
             </div>
