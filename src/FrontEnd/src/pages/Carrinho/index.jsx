@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
 import SideNavBar from '../../components/sideNavBar';
 import CarrinhoItem from '../../components/carrinhoItem';
 import CarrinhoResumo from '../../components/carrinhoResumo';
@@ -16,35 +17,52 @@ import '../../styles/carrinho.css';
 function Carrinho() {
     const [itensCarrinho, setItensCarrinho] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [redirectToLogin, setRedirectToLogin] = useState(false);
 
-    // Simular carregamento dos itens do carrinho
     useEffect(() => {
-        // Mock data - substituir por chamada à API
-        const mockItens = [
-            {
-                id: 1,
-                nome: "Coca-Cola Lata 350ml",
-                preco: 3.50,
-                quantidade: 2,
-                quantidade_estoque: 50,
-                imagem: "https://cdn.dooca.store/4309/products/701d27b0222a52d1980f7e84ff282b4c.jpg?v=1653064450",
-                fornecedor: { nome: "Distribuidora ABC" }
-            },
-            {
-                id: 2,
-                nome: "Água Mineral 500ml",
-                preco: 2.00,
-                quantidade: 1,
-                quantidade_estoque: 100,
-                imagem: "https://cdn.dooca.store/4309/products/701d27b0222a52d1980f7e84ff282b4c.jpg?v=1653064450",
-                fornecedor: { nome: "Águas do Brasil" }
-            }
-        ];
+        const host = import.meta.env.REACT_APP_HOST || "http://localhost:8000";
+        const fetchData = async () => {
+            const token = sessionStorage.getItem("accessToken");
 
-        setTimeout(() => {
-            setItensCarrinho(mockItens);
-            setLoading(false);
-        }, 1000);
+            if (!token) {
+                setRedirectToLogin(true);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${host}/api/carrinho/`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                if (response.status === 401) {
+                    console.log("Unauthorized login");
+                    setRedirectToLogin(true);
+                    return;
+                }
+
+                let carrinho_json = await response.json();
+                // Adaptar estrutura para compatibilidade com componentes existentes
+                const items = carrinho_json.map(item => ({
+                    id: item.id,
+                    nome: item.produto.nome,
+                    preco: parseFloat(item.produto.preco),
+                    quantidade: item.quantidade,
+                    subtotal: item.subtotal,
+                    produto_id: item.produto.id
+                }));
+                setItensCarrinho(items);
+            } catch (error) {
+                console.error("Erro ao buscar carrinho:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
     }, []);
 
     // Handlers
@@ -52,7 +70,7 @@ function Carrinho() {
         setItensCarrinho(itens =>
             itens.map(item =>
                 item.id === itemId
-                    ? { ...item, quantidade: novaQuantidade }
+                    ? { ...item, quantidade: novaQuantidade, subtotal: item.preco * novaQuantidade }
                     : item
             )
         );
@@ -67,6 +85,10 @@ function Carrinho() {
         alert(`Compra finalizada! Total: R$ ${dadosCheckout.total.toFixed(2)}`);
         // Aqui seria feita a integração com API de pagamento
     };
+
+    if (redirectToLogin) {
+        return <Navigate to="/Auth?sessionExpired=true" replace />;
+    }
 
     if (loading) {
         return (
