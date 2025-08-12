@@ -15,7 +15,7 @@ export class NavBar extends React.Component {
               </Link>
               <h4>•</h4>
 
-              <Link to="#">
+              <Link to="/Auth">
                 <li>CATEGORIAS DE BEBIDAS</li>
               </Link>
 
@@ -23,12 +23,12 @@ export class NavBar extends React.Component {
                 <img className="logo" src={logo} />
               </li>
 
-              <Link to="#">
+              <Link to="/Auth">
                 <li>FORNECEDORES</li>
               </Link>
               <h4>•</h4>
 
-              <Link to="#">
+              <Link to="/Auth">
                 <li>PRODUTOS</li>
               </Link>
             </ul>
