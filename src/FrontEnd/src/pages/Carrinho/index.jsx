@@ -18,11 +18,11 @@ function Carrinho() {
     const [itensCarrinho, setItensCarrinho] = useState([]);
     const [loading, setLoading] = useState(true);
     const [redirectToLogin, setRedirectToLogin] = useState(false);
+    const host = import.meta.env.REACT_APP_HOST || "http://localhost:8000";
+    const token = sessionStorage.getItem("accessToken");
 
     useEffect(() => {
-        const host = import.meta.env.REACT_APP_HOST || "http://localhost:8000";
         const fetchData = async () => {
-            const token = sessionStorage.getItem("accessToken");
 
             if (!token) {
                 setRedirectToLogin(true);
@@ -45,8 +45,13 @@ function Carrinho() {
                 }
 
                 let carrinho_json = await response.json();
+                console.log('Resposta da API:', carrinho_json);
+                
+                // Verificar se é array ou objeto com propriedade itens
+                let itensArray = Array.isArray(carrinho_json) ? carrinho_json : carrinho_json.itens || [];
+                
                 // Adaptar estrutura para compatibilidade com componentes existentes
-                const items = carrinho_json.map(item => ({
+                const items = itensArray.map(item => ({
                     id: item.id,
                     nome: item.produto.nome,
                     preco: parseFloat(item.produto.preco),
@@ -80,10 +85,20 @@ function Carrinho() {
         setItensCarrinho(itens => itens.filter(item => item.id !== itemId));
     };
 
-    const handleCheckout = (dadosCheckout) => {
+    const handleCheckout = async (dadosCheckout) => {
+        try{
         console.log('Finalizando compra:', dadosCheckout);
-        alert(`Compra finalizada! Total: R$ ${dadosCheckout.total.toFixed(2)}`);
-        // Aqui seria feita a integração com API de pagamento
+        await fetch(`${host}/api/carrinho/finalizar/`, {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+        alert(`Compra finalizada com sucesso!`);
+        } catch (error) {
+            console.error("Erro ao buscar carrinho:", error);
+        } 
     };
 
     if (redirectToLogin) {

@@ -54,7 +54,8 @@ const CarrinhoItem = ({ item, onUpdateQuantity, onRemove }) => {
                         min={MIN_QUANTITY}
                         max={item.quantidade_estoque}
                     />
-                    <button onClick={aumentar} disabled={item.quantidade >= item.quantidade_estoque}>+</button>
+                    <button onClick={aumentar}>+</button> {/*disabled={item.quantidade >= item.quantidade_estoque}*/}
+
                 </div>
                 
                 <div className="item-subtotal">
