@@ -27,7 +27,7 @@ const HeroSection = () => {
   const navigate = useNavigate();
 
   const handleLoginRedirect = () => {
-    navigate("/login");
+    navigate("/Auth");
   };
 
   return (
@@ -190,12 +190,8 @@ const HeroSection = () => {
           <div className="card-categoria">
             <div className="card-content">
               <h3>Refrigerantes</h3>
-              <Link
-                style={{ marginLeft: "-40px" }}
-                to="/login"
-                className="saiba-mais"
-              >
-                SAIBA MAIS
+              <Link to="/Auth">
+                <a className="saiba-mais">SAIBA MAIS</a>
               </Link>
             </div>
             <img
@@ -207,8 +203,8 @@ const HeroSection = () => {
           <div className="card-categoria">
             <div className="card-conteudo">
               <h3>Cervejas</h3>
-              <Link to="/login" className="saiba-mais">
-                SAIBA MAIS
+              <Link to="/Auth">
+                <a className="saiba-mais">SAIBA MAIS</a>
               </Link>
             </div>
             <img
@@ -220,8 +216,8 @@ const HeroSection = () => {
           <div className="card-categoria">
             <div className="card-content">
               <h3>Águas</h3>
-              <Link to="/login" className="saiba-mais">
-                SAIBA MAIS
+              <Link to="/Auth">
+                <a className="saiba-mais">SAIBA MAIS</a>
               </Link>
             </div>
             <img src={aguas} alt="Águas" />
@@ -229,12 +225,8 @@ const HeroSection = () => {
           <div className="card-categoria">
             <div className="card-content">
               <h3>Energéticos</h3>
-              <Link
-                style={{ marginLeft: "-18px" }}
-                to="/login"
-                className="saiba-mais"
-              >
-                SAIBA MAIS
+              <Link to="/Auth">
+                <a className="saiba-mais">SAIBA MAIS</a>
               </Link>
             </div>
             <img
@@ -246,8 +238,8 @@ const HeroSection = () => {
           <div className="card-categoria">
             <div className="card-content">
               <h3>Sucos</h3>
-              <Link to="/login" className="saiba-mais">
-                SAIBA MAIS
+              <Link to="/Auth">
+                <a className="saiba-mais">SAIBA MAIS</a>
               </Link>
             </div>
             <img
@@ -259,8 +251,8 @@ const HeroSection = () => {
           <div className="card-categoria">
             <div className="card-content">
               <h3>Vinhos</h3>
-              <Link to="/login" className="saiba-mais">
-                SAIBA MAIS
+              <Link to="/Auth">
+                <a className="saiba-mais">SAIBA MAIS</a>
               </Link>
             </div>
             <img
@@ -319,7 +311,7 @@ const HeroSection = () => {
               <p>Fornecedora de Cerveja</p>
             </div>
             <div className="botao-fornecedor">
-              <Link to="/login" className="ver-fornecedores-btn">
+              <Link to="/Auth" className="ver-fornecedores-btn">
                 VER TODOS OS FORNECEDORES
               </Link>
             </div>

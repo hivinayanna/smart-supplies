@@ -58,38 +58,39 @@ const Fornecedores = () => {
     return <Navigate to="/Auth?sessionExpired=true" replace />;
   }
 
-  // const fornecedores = [
-  //   {
-  //     id: 1,
-  //     nome: "Felipe Souza",
-  //     imagem: felipeSouza,
-  //     descricao:
-  //       "Oferecemos as principais marcas de refrigerantes com preços competitivos e pronta entrega para sua revenda.",
-  //   },
-  //   {
-  //     id: 2,
-  //     nome: "Mariana Nunes",
-  //     imagem: marianaNunes,
-  //     descricao:
-  //       "Trabalhamos com uma seleção especial de vinhos nacionais e importados, ideais para bares, adegas e eventos.",
-  //   },
-  //   {
-  //     id: 3,
-  //     nome: "Vanessa Martins",
-  //     imagem: vanessaMartins,
-  //     descricao:
-  //       "Especialista em cervejas artesanais e comerciais, atendemos com variedade e logística rápida para o seu negócio.",
-  //   },
-  //   {
-  //     id: 4,
-  //     nome: "Beatriz Freitas",
-  //     imagem: beatrizFreitas,
-  //     descricao:
-  //       "Distribuímos sucos naturais e industrializados com qualidade garantida e suporte para estabelecimentos de todos os portes.",
-  //   },
-  // ];
+  const fornecedoresMock = [
+    {
+      id: 1,
+      nome: "Felipe Souza",
+      imagem: felipeSouza,
+      descricao:
+        "Oferecemos as principais marcas de refrigerantes com preços competitivos e pronta entrega para sua revenda.",
+    },
+    {
+      id: 2,
+      nome: "Mariana Nunes",
+      imagem: marianaNunes,
+      descricao:
+        "Trabalhamos com uma seleção especial de vinhos nacionais e importados, ideais para bares, adegas e eventos.",
+    },
+    {
+      id: 3,
+      nome: "Vanessa Martins",
+      imagem: vanessaMartins,
+      descricao:
+        "Especialista em cervejas artesanais e comerciais, atendemos com variedade e logística rápida para o seu negócio.",
+    },
+    {
+      id: 4,
+      nome: "Beatriz Freitas",
+      imagem: beatrizFreitas,
+      descricao:
+        "Distribuímos sucos naturais e industrializados com qualidade garantida e suporte para estabelecimentos de todos os portes.",
+    },
+  ];
 
-  const fornecedoresFiltrados = fornecedores.filter((fornecedor) =>
+  const dadosFornecedores = fornecedores.length > 0 ? fornecedores : fornecedoresMock;
+  const fornecedoresFiltrados = dadosFornecedores.filter((fornecedor) =>
     fornecedor.nome.toLowerCase().includes(searchTerm.toLowerCase())
   );
   return (

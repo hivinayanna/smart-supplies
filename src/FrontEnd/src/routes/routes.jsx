@@ -1,32 +1,28 @@
+// routes.jsx
+import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
-import Fornecedores from "../components/fornecedores";
-import Footer from "../components/footer";
-import Login from "../components/login";
 import Auth from "../pages/Auth";
+import Carrinho from "../pages/Carrinho";
 import StartPage from "../pages/StartPage";
-
-const Layout = ({ children }) => {
-  return (
-    <>
-      {children}
-      <Footer />
-    </>
-  );
-};
+import MeusProdutos from "../pages/MeusProdutos";
+import ListaDesejos from "../pages/ListaDesejos";
+import ProdutoDetalhes from "../pages/ProdutoDetalhes";
+import Fornecedores from "../pages/Fornecedores";
 
 function AppRoutes() {
   return (
     <BrowserRouter>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/fornecedores" element={<Fornecedores />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/start" element={<StartPage />} />
-        </Routes>
-      </Layout>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/Auth" element={<Auth />} />
+        <Route path="/Start" element={<StartPage />} />
+        <Route path="/carrinho" element={<Carrinho />} />
+        <Route path="/meus-produtos" element={<MeusProdutos />} />
+        <Route path="/fornecedores" element={<Fornecedores />} />
+        <Route path="/lista-desejos" element={<ListaDesejos />} />
+        <Route path="/produto/:id" element={<ProdutoDetalhes />} />
+      </Routes>
     </BrowserRouter>
   );
 }
