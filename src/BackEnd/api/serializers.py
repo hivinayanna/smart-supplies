@@ -136,3 +136,10 @@ class AvaliacaoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Avaliacao
         fields = ['id', 'produto', 'usuario', 'nota', 'comentario', 'data']
+
+
+# Atualizar perfil
+class UsuarioUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Usuario
+        fields = ['nome_completo','telefone','endereco','email']
