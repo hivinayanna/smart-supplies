@@ -16,7 +16,8 @@ from .serializers import (
     CategoriaSerializer,
     CarrinhoSerializer,
     ProdutoResumoSerializer,
-    AvaliacaoSerializer
+    AvaliacaoSerializer,
+    UsuarioUpdateSerializer
 )
 
 # Endpoint para listar produtos, com filtros opcionais por categoria e nome
@@ -308,3 +309,26 @@ def insights_produto(request, pk):
         'media_nota': round(media_nota or 0, 2),
         'total_avaliacoes': total_avaliacoes
     })
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def historico_compras(request):
+    pedidos = Pedido.objects.filter(cliente=request.user).order_by('-data')
+    serializer = PedidoSerializer(pedidos, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def historico_vendas(request):
+    itens = ItemPedido.objects.filter(produto__fornecedor=request.user).select_related('pedido')
+    pedidos_ids = itens.values_list('pedido_id', flat=True).distinct()
+    pedidos = Pedido.objects.filter(id__in=pedidos_ids).order_by('-data')
+    serializer = PedidoSerializer(pedidos, many=True)
+    return Response(serializer.data)
+
+class AlterarPerfilView(generics.RetrieveUpdateAPIView):
+    serializer_class = UsuarioUpdateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user

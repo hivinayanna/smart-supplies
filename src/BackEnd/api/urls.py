@@ -4,7 +4,7 @@ from .views import (
     listar_pedidos, criar_pedido, listar_fornecedores, UsuarioCreateView,
     ProdutoUpdateDeleteView, listar_categorias, listar_produtos_do_fornecedor,
     ver_carrinho, adicionar_ao_carrinho, remover_item_carrinho, atualizar_item_carrinho, finalizar_carrinho, ListaDesejosView, avaliar_produto,
-    insights_produto
+    insights_produto, historico_compras, historico_vendas, AlterarPerfilView
 )
 
 urlpatterns = [
@@ -46,5 +46,12 @@ urlpatterns = [
 
     # Rota insights
     path('produtos/<int:pk>/insights/', insights_produto, name='insights-produto'),
+
+    # Rotas para histório
+    path('historico/compras/', historico_compras, name='historico-compras'),
+    path('historico/vendas/', historico_vendas, name='historico-vendas'),
+
+    # Rota ver e editar perfil
+    path('usuarios/meu-perfil/', AlterarPerfilView.as_view(), name='alterar-perfil'),
 
 ]
