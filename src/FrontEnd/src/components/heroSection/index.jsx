@@ -190,9 +190,9 @@ const HeroSection = () => {
           <div className="card-categoria">
             <div className="card-content">
               <h3>Refrigerantes</h3>
-              <a href="#" className="saiba-mais">
-                SAIBA MAIS
-              </a>
+              <Link to="/Auth">
+                <a className="saiba-mais">SAIBA MAIS</a>
+              </Link>
             </div>
             <img
               style={{ top: "-1px", scale: "1.4" }}
@@ -203,9 +203,9 @@ const HeroSection = () => {
           <div className="card-categoria">
             <div className="card-conteudo">
               <h3>Cervejas</h3>
-              <a href="#" className="saiba-mais">
-                SAIBA MAIS
-              </a>
+              <Link to="/Auth">
+                <a className="saiba-mais">SAIBA MAIS</a>
+              </Link>
             </div>
             <img
               style={{ top: "-50px", scale: "1" }}
@@ -216,18 +216,18 @@ const HeroSection = () => {
           <div className="card-categoria">
             <div className="card-content">
               <h3>Águas</h3>
-              <a href="#" className="saiba-mais">
-                SAIBA MAIS
-              </a>
+              <Link to="/Auth">
+                <a className="saiba-mais">SAIBA MAIS</a>
+              </Link>
             </div>
             <img src={aguas} alt="Águas" />
           </div>
           <div className="card-categoria">
             <div className="card-content">
               <h3>Energéticos</h3>
-              <a href="#" className="saiba-mais">
-                SAIBA MAIS
-              </a>
+              <Link to="/Auth">
+                <a className="saiba-mais">SAIBA MAIS</a>
+              </Link>
             </div>
             <img
               style={{ top: "-5px", scale: "1.1" }}
@@ -238,9 +238,9 @@ const HeroSection = () => {
           <div className="card-categoria">
             <div className="card-content">
               <h3>Sucos</h3>
-              <a href="#" className="saiba-mais">
-                SAIBA MAIS
-              </a>
+              <Link to="/Auth">
+                <a className="saiba-mais">SAIBA MAIS</a>
+              </Link>
             </div>
             <img
               style={{ top: "-10px", scale: "1.1" }}
@@ -251,9 +251,9 @@ const HeroSection = () => {
           <div className="card-categoria">
             <div className="card-content">
               <h3>Vinhos</h3>
-              <a href="#" className="saiba-mais">
-                SAIBA MAIS
-              </a>
+              <Link to="/Auth">
+                <a className="saiba-mais">SAIBA MAIS</a>
+              </Link>
             </div>
             <img
               style={{ top: "-30px", scale: "1" }}
