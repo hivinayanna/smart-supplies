@@ -1,5 +1,9 @@
 from rest_framework import serializers
 from .models import Usuario, Produto, Categoria, Pedido, ItemPedido, Fornecedor, Carrinho, ItemCarrinho, ListaDesejos, Avaliacao
+from PIL import Image, ImageOps
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from pathlib import Path
+import io
 
 # Serializer para exibir informações do usuário
 class UsuarioSerializer(serializers.ModelSerializer):
@@ -44,6 +48,43 @@ class ProdutoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Produto
         fields = ['id', 'nome', 'descricao', 'preco', 'quantidade_estoque', 'categoria', 'categoria_id', 'fornecedor', 'imagem']
+
+    def _resize_500(self, uploaded):
+        # Abre a imagem e corrige orientação EXIF
+        img = Image.open(uploaded)
+        img = ImageOps.exif_transpose(img)
+
+        # Converte para RGB (remove transparência)
+        if img.mode in ('RGBA', 'P'):
+            bg = Image.new('RGB', img.size, (255, 255, 255))
+            if img.mode == 'RGBA':
+                bg.paste(img, mask=img.split()[3])
+            else:
+                bg.paste(img)
+            img = bg
+        else:
+            img = img.convert('RGB')
+
+        # Redimensiona mantendo proporção para caber em 500x500
+        img.thumbnail((500, 500), Image.Resampling.LANCZOS)
+
+        # Salva em memória como JPEG otimizado
+        buffer = io.BytesIO()
+        img.save(buffer, format='JPEG', quality=85, optimize=True)
+        buffer.seek(0)
+
+        # Retorna arquivo em memória pronto para o Django/Cloudinary
+        nome = f"{Path(uploaded.name).stem}.jpg"
+        return InMemoryUploadedFile(
+            buffer, field_name='ImageField', name=nome,
+            content_type='image/jpeg', size=buffer.getbuffer().nbytes, charset=None
+        )
+
+    def validate_imagem(self, imagem):
+        # Só processa se veio imagem no request
+        if imagem:
+            return self._resize_500(imagem)
+        return imagem
 
 class ProdutoResumoSerializer(serializers.ModelSerializer):
     class Meta:
