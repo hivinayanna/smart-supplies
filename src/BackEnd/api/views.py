@@ -6,8 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import RetrieveAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.exceptions import PermissionDenied 
 from django.db import transaction, IntegrityError
-from django.db.models import Avg
-from .models import Produto, Pedido, Fornecedor, Usuario, Categoria, Carrinho, ItemCarrinho, ListaDesejos, Avaliacao
+from django.db.models import Avg, Sum, F
+from .models import Produto, Pedido, Fornecedor, Usuario, Categoria, Carrinho, ItemCarrinho, ListaDesejos, Avaliacao, ItemPedido
 from .serializers import (
     ProdutoSerializer,
     PedidoSerializer,
@@ -289,7 +289,6 @@ def avaliar_produto(request):
 
     return Response({'mensagem': 'Avaliação registrada com sucesso.'}, status=status.HTTP_201_CREATED)
 
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def insights_produto(request, pk):
@@ -298,16 +297,29 @@ def insights_produto(request, pk):
     except Produto.DoesNotExist:
         return Response({'erro': 'Produto não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
 
+    # Permitir apenas ao vendedor dono do produto
     if produto.fornecedor != request.user:
         return Response({'erro': 'Você não tem permissão para acessar os insights deste produto.'}, status=status.HTTP_403_FORBIDDEN)
 
+    # Estatísticas de avaliações
     media_nota = Avaliacao.objects.filter(produto=produto).aggregate(avg=Avg('nota'))['avg']
     total_avaliacoes = Avaliacao.objects.filter(produto=produto).count()
+
+    # Estatísticas de vendas (quantidade total e receita)
+    vendas = ItemPedido.objects.filter(produto=produto).aggregate(
+        quantidade_vendida=Sum('quantidade'),
+        receita_total=Sum(F('quantidade') * F('preco_unitario'))
+    )
+
+    quantidade_vendida = vendas['quantidade_vendida'] or 0
+    receita_total = vendas['receita_total'] or 0
 
     return Response({
         'produto': produto.nome,
         'media_nota': round(media_nota or 0, 2),
-        'total_avaliacoes': total_avaliacoes
+        'total_avaliacoes': total_avaliacoes,
+        'receita_total': float(receita_total),
+        'total_produtos_vendidos': quantidade_vendida
     })
 
 @api_view(['GET'])
