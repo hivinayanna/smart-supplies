@@ -4,9 +4,10 @@ import '../../styles/produtoCard.css';
 import { Link } from 'react-router-dom';
 
 const host = import.meta.env.REACT_APP_HOST || "http://localhost:8000";
-const ProdutoCard = ({ produto }) => {
+const ProdutoCard = ({ produto, mostrarNotificacao }) => {
     const [redirectToLogin, setRedirectToLogin] = useState(false);
     const [quantidade, setQuantidade] = useState(1);
+    const [isFavorito, setIsFavorito] = useState(false);
 
     if (!produto) {
         console.log('Produto não encontrado:', produto);
@@ -15,9 +16,17 @@ const ProdutoCard = ({ produto }) => {
 
     const aumentar = () => setQuantidade((q) => q + 1);
     const diminuir = () => setQuantidade((q) => (q > 1 ? q - 1 : 1));
+    
+    const toggleFavorito = () => {
+        setIsFavorito(!isFavorito);
+        mostrarNotificacao(
+            isFavorito ? 'Removido da lista de desejos!' : 'Adicionado a lista de desejos!',
+            'success'
+        );
+    };
     const adicionarAoCarrinho = async () => {
         if (produto.quantidade_estoque === 0) {
-            alert('Produto sem estoque!');
+            mostrarNotificacao('Produto sem estoque!', 'error');
             return;
         }
         
@@ -65,9 +74,9 @@ const ProdutoCard = ({ produto }) => {
                 body: JSON.stringify({ produto_id: produto.id, quantidade })
             });
             
-            alert(`Adicionado ${quantidade}x "${produto.nome}" ao carrinho!`);
+            mostrarNotificacao(`Adicionado ${quantidade}x "${produto.nome}" ao carrinho!`, 'success');
         } catch (error) {
-            alert('Erro ao adicionar ao carrinho');
+            mostrarNotificacao('Erro ao adicionar ao carrinho', 'error');
         }
     };
 
@@ -77,12 +86,17 @@ const ProdutoCard = ({ produto }) => {
 
     return (
         <div className="produto-card">
-            <Link to={`/produto/${produto.id}`}>
-                <img
-                    src={produto.imagem ? `${host}/${produto.imagem}` : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROJGo_BDmE1BQXej-UemTXxZG6RkDsA95ZnA&s"}
-                    alt={produto.nome}
-                />
-            </Link>
+            <div className="card-image-container">
+                <Link to={`/produto/${produto.id}`}>
+                    <img
+                        src={produto.imagem ? `${host}/${produto.imagem}` : "https://res.cloudinary.com/dj5eeszbx/image/upload/v1755180798/sem_imagem_o3vo3n.png"}
+                        alt={produto.nome}
+                    />
+                </Link>
+                <button className={`btn-favorito ${isFavorito ? 'favorito' : ''}`} onClick={toggleFavorito}>
+                    ♥
+                </button>
+            </div>
 
             <div className="card-content">
                 <h2>{produto.nome}</h2>
@@ -112,6 +126,7 @@ const ProdutoCard = ({ produto }) => {
                     {produto.quantidade_estoque === 0 ? 'SEM ESTOQUE' : 'ADICIONAR AO CARRINHO'}
                 </button>
             </div>
+
         </div>
     );
 };

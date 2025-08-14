@@ -3,6 +3,8 @@ import SideNavBar from '../../components/sideNavBar';
 import CadastrarItensFornecedor from '../../components/cadastrarItensFornecedor';
 import ListarItensFornecedor from '../../components/listarItensFornecedor';
 import Footer from '../../components/footer';
+import Notificacao from '../../components/notificacao';
+import { useNotificacao } from '../../hooks/useNotificacao';
 import '../../styles/meusProdutos.css';
 
 /**
@@ -15,6 +17,7 @@ import '../../styles/meusProdutos.css';
 function MeusProdutos() {
     const [produtos, setProdutos] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { notificacao, mostrarNotificacao, fecharNotificacao } = useNotificacao();
 
     // Simular carregamento dos produtos
     useEffect(() => {
@@ -27,7 +30,7 @@ function MeusProdutos() {
                 preco: 3.50,
                 quantidade_estoque: 100,
                 categoria: "bebidas",
-                imagem: "https://cdn.dooca.store/4309/products/701d27b0222a52d1980f7e84ff282b4c.jpg?v=1653064450",
+                imagem: "https://res.cloudinary.com/dj5eeszbx/image/upload/v1755180798/sem_imagem_o3vo3n.png",
                 data_cadastro: "2024-01-15T10:30:00Z"
             },
             {
@@ -37,7 +40,7 @@ function MeusProdutos() {
                 preco: 2.00,
                 quantidade_estoque: 200,
                 categoria: "bebidas",
-                imagem: "https://cdn.dooca.store/4309/products/701d27b0222a52d1980f7e84ff282b4c.jpg?v=1653064450",
+                imagem: "https://res.cloudinary.com/dj5eeszbx/image/upload/v1755180798/sem_imagem_o3vo3n.png",
                 data_cadastro: "2024-01-14T14:20:00Z"
             }
         ];
@@ -49,9 +52,21 @@ function MeusProdutos() {
     }, []);
 
     // Handler para adicionar novo produto
-    const handleAddProduto = async (novoProduto) => {
+    const handleAddProduto = async (formDataProduto) => {
         // Simular delay da API
         await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Converter FormData para objeto
+        const novoProduto = {
+            id: Date.now(),
+            nome: formDataProduto.get('nome'),
+            descricao: formDataProduto.get('descricao'),
+            preco: parseFloat(formDataProduto.get('preco')),
+            quantidade_estoque: parseInt(formDataProduto.get('quantidade_estoque')),
+            categoria: formDataProduto.get('categoria'),
+            imagem: formDataProduto.get('imagem') ? URL.createObjectURL(formDataProduto.get('imagem')) : null,
+            data_cadastro: new Date().toISOString()
+        };
         
         setProdutos(prev => [...prev, novoProduto]);
     };
@@ -63,7 +78,7 @@ function MeusProdutos() {
                 produto.id === produtoAtualizado.id ? produtoAtualizado : produto
             )
         );
-        alert('Produto atualizado com sucesso!');
+        mostrarNotificacao('Produto atualizado com sucesso!', 'success');
     };
 
     // Handler para deletar produto
@@ -95,7 +110,7 @@ function MeusProdutos() {
 
                     <div className="meus-produtos-content">
                         <div className="cadastro-section">
-                            <CadastrarItensFornecedor onAddProduto={handleAddProduto} />
+                            <CadastrarItensFornecedor onAddProduto={handleAddProduto} mostrarNotificacao={mostrarNotificacao} />
                         </div>
 
                         <div className="lista-section">
@@ -108,6 +123,13 @@ function MeusProdutos() {
                     </div>
                 </main>
             </div>
+            {notificacao && (
+                <Notificacao
+                    mensagem={notificacao.mensagem}
+                    tipo={notificacao.tipo}
+                    onClose={fecharNotificacao}
+                />
+            )}
             <Footer />
         </>
     );

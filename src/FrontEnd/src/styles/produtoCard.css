@@ -26,7 +26,8 @@
 .produto-card .card-content {
   display: flex;
   flex-direction: column;
-  margin: 0;
+  margin-left: 15px;
+  margin-right: 15px;
 }
 
 .produto-card h2 {
@@ -98,6 +99,34 @@
 
 .btn-carrinho:hover {
   background-color: #152941;
+}
+
+.card-image-container {
+  position: relative;
+}
+
+.btn-favorito {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  font-size: 18px;
+  cursor: pointer;
+  color: #ccc;
+  transition: all 0.3s ease;
+}
+
+.btn-favorito:hover {
+  background: white;
+  transform: scale(1.1);
+}
+
+.btn-favorito.favorito {
+  color: #e74c3c;
 }
 
 

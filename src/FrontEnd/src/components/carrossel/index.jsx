@@ -15,7 +15,7 @@ function Carrossel({ imagens }) {
   useEffect(() => {
     const timer = setInterval(() => {
       proximoSlide();
-    }, 5000);
+    }, 7000);
     return () => clearInterval(timer);
   }, [imagens.length]);
 
