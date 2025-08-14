@@ -3,8 +3,9 @@ import logo from "../../assets/Logo.png";
 import "../../styles/login.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { validarCampo, mensagensErro, aplicarMascara } from "../../utils/validacao";
 
-function Login() {
+function Login({ mostrarNotificacao }) {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -29,9 +30,29 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isLogin && senha !== confirmaSenha) {
-      alert("As senhas não coincidem.");
-      return;
+    
+    if (!isLogin) {
+      // Validações para cadastro
+      if (!validarCampo('username', username)) {
+        mostrarNotificacao(mensagensErro.username, "error");
+        return;
+      }
+      if (!validarCampo('nomeCompleto', nomeCompleto)) {
+        mostrarNotificacao(mensagensErro.nomeCompleto, "error");
+        return;
+      }
+      if (!validarCampo('email', email)) {
+        mostrarNotificacao(mensagensErro.email, "error");
+        return;
+      }
+      if (!validarCampo('senha', senha)) {
+        mostrarNotificacao(mensagensErro.senha, "error");
+        return;
+      }
+      if (senha !== confirmaSenha) {
+        mostrarNotificacao("As senhas não coincidem.", "error");
+        return;
+      }
     }
 
     const register_data = {
@@ -55,7 +76,7 @@ function Login() {
         response = await axios.post(`${host}/api/token/`, login_data);
         console.log("Login:", login_data);
         console.log("Resposta: ", response);
-        alert("Usuário logado com sucesso!");
+        mostrarNotificacao("Usuário logado com sucesso!", "success");
 
         if (response.data.access) {
           console.log(`token: ${response.data.access}`);
@@ -74,11 +95,21 @@ function Login() {
         );
         console.log("Cadastro:", register_data);
         console.log("Resposta: ", response);
-        alert("Cadastro realizado com sucesso!");
+        mostrarNotificacao("Cadastro realizado com sucesso!", "success");
+        // Limpar campos e ir para login
+        setUsername("");
+        setNomeCompleto("");
+        setTelefone("");
+        setEndereco("");
+        setTipoConta("");
+        setEmail("");
+        setSenha("");
+        setConfirmaSenha("");
+        setIsLogin(true);
       }
     } catch (error) {
       console.error("Erro:", error);
-      alert("Erro ao processar. Consulte o console para detalhes.");
+      mostrarNotificacao("Erro ao processar. Verifique os dados e tente novamente.", "error");
     }
   };
 
@@ -116,21 +147,21 @@ function Login() {
               type="text"
               placeholder="Usuário"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => setUsername(aplicarMascara('username', e.target.value))}
               required
             />
             <input
               type="text"
               placeholder="Nome Completo"
               value={nomeCompleto}
-              onChange={(e) => setNomeCompleto(e.target.value)}
+              onChange={(e) => setNomeCompleto(aplicarMascara('nomeCompleto', e.target.value))}
               required
             />
             <input
               type="text"
               placeholder="Telefone"
               value={telefone}
-              onChange={(e) => setTelefone(e.target.value)}
+              onChange={(e) => setTelefone(aplicarMascara('telefone', e.target.value))}
               required
             />
             <input

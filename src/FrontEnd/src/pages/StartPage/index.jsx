@@ -1,13 +1,14 @@
 import ProdutoList from "../../components/produtoList";
 import SideNavBar from "../../components/sideNavBar";
 import Carrossel from "../../components/carrossel";
+import Footer from "../../components/footer";
 import { useSearchParams } from "react-router-dom";
 import "../../styles/startPage.css";
 
 const imagensBanner = [
-  "https://www.bioleve.com.br/img/intro_img/banner-sucos.jpg",
-  "https://bebidaspinheirense.com.br/wp-content/uploads/2024/05/BANNERS-1200X330PX-2.jpg",
-  "https://www.imigrantesbebidas.com.br/bebida/images/promo/250228_banner_hero_categorias34.jpg",
+  "https://res.cloudinary.com/dj5eeszbx/image/upload/v1755177973/cerveja_iyewmx.webp",
+  "https://res.cloudinary.com/dj5eeszbx/image/upload/v1755178576/whisky_j9yv9n.webp",
+  "https://res.cloudinary.com/dj5eeszbx/image/upload/v1755179227/schweppesbanner_ngbkln.webp",
 ];
 
 function StartPage() {
@@ -19,6 +20,7 @@ function StartPage() {
         {/* <SideNavBar tipoUsuario = {searchParams.get('tipoUsuario')}/> */}
         <SideNavBar tipoUsuario={sessionStorage.getItem("tipoUsuario")} />
         <ProdutoList />
+        <Footer />
       </div>
     </>
   );

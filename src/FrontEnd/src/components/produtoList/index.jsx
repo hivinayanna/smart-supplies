@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import ProdutoCard from "../produtoCard";
 import "../../styles/produtoList.css";
+import Notificacao from '../notificacao';
+import { useNotificacao } from '../../hooks/useNotificacao';
 import { use } from "react";
 
 function ProdutoList() {
@@ -16,6 +18,8 @@ function ProdutoList() {
 
   // Estado para redirecionar para login
   const [redirectToLogin, setRedirectToLogin] = useState(false);
+  
+  const { notificacao, mostrarNotificacao, fecharNotificacao } = useNotificacao();
 
   // Busca a lista de produtos no bakend
   useEffect(() => {
@@ -111,10 +115,17 @@ function ProdutoList() {
         {/* ÁREA ONDE OS PRODUTOS (CARDS) SÃO EXIBIDOS */}
         <div className="produto-cards">
           {produtosFiltrados.map((produto) => (
-            <ProdutoCard key={produto.id} produto={produto} />
+            <ProdutoCard key={produto.id} produto={produto} mostrarNotificacao={mostrarNotificacao} />
           ))}
         </div>
       </div>
+      {notificacao && (
+        <Notificacao
+          mensagem={notificacao.mensagem}
+          tipo={notificacao.tipo}
+          onClose={fecharNotificacao}
+        />
+      )}
     </div>
   );
 }
