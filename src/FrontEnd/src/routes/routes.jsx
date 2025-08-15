@@ -9,6 +9,7 @@ import MeusProdutos from "../pages/MeusProdutos";
 import ListaDesejos from "../pages/ListaDesejos";
 import ProdutoDetalhes from "../pages/ProdutoDetalhes";
 import Fornecedores from "../pages/Fornecedores";
+import HistoricoPage from "../pages/HistoricoPage";
 
 function AppRoutes() {
   return (
@@ -21,6 +22,7 @@ function AppRoutes() {
         <Route path="/meus-produtos" element={<MeusProdutos />} />
         <Route path="/fornecedores" element={<Fornecedores />} />
         <Route path="/lista-desejos" element={<ListaDesejos />} />
+        <Route path="/historico" element={<HistoricoPage />} />
         <Route path="/produto/:id" element={<ProdutoDetalhes />} />
       </Routes>
     </BrowserRouter>
