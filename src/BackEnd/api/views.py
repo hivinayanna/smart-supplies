@@ -7,7 +7,7 @@ from rest_framework.generics import RetrieveAPIView, RetrieveUpdateDestroyAPIVie
 from rest_framework.exceptions import PermissionDenied 
 from django.db import transaction, IntegrityError
 from django.db.models import Avg
-from .models import Produto, Pedido, Fornecedor, Usuario, Categoria, Carrinho, ItemCarrinho, ListaDesejos, Avaliacao
+from .models import Produto, Pedido, ItemPedido, Fornecedor, Usuario, Categoria, Carrinho, ItemCarrinho, ListaDesejos, Avaliacao
 from .serializers import (
     ProdutoSerializer,
     PedidoSerializer,
