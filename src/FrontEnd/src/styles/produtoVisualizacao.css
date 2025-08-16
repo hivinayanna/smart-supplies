@@ -11,6 +11,7 @@
 .produto-imagem {
     flex: 1;
     max-width: 400px;
+    position: relative;
 }
 
 .produto-imagem img {
@@ -82,6 +83,31 @@
     font-weight: bold;
     border-radius: 6px;
     cursor: pointer;
+}
+
+.btn-favorito-detalhes {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    font-size: 22px;
+    cursor: pointer;
+    color: #ccc;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-favorito-detalhes:hover {
+    background: white;
+    transform: scale(1.1);
+}
+
+.btn-favorito-detalhes.favorito {
+    color: #e74c3c;
 }
 
 @media (max-width: 768px) {

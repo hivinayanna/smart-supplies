@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import '../../styles/cadastrarItensFornecedor.css';
+import { validarCampo, mensagensErro, aplicarMascara } from '../../utils/validacao';
 
 /**
  * Componente CadastrarItensFornecedor - Formulário para cadastrar novos produtos
@@ -8,14 +9,14 @@ import '../../styles/cadastrarItensFornecedor.css';
  * @param {Function} onAddProduto - Callback para adicionar novo produto
  * @returns {JSX.Element} Elemento JSX do formulário de cadastro
  */
-const CadastrarItensFornecedor = ({ onAddProduto }) => {
+const CadastrarItensFornecedor = ({ onAddProduto, mostrarNotificacao }) => {
     const [formData, setFormData] = useState({
         nome: '',
         descricao: '',
         preco: '',
         quantidade_estoque: '',
         categoria: '',
-        imagem: ''
+        imagem: null
     });
     const [loading, setLoading] = useState(false);
 
@@ -31,18 +32,35 @@ const CadastrarItensFornecedor = ({ onAddProduto }) => {
     // Handler para submit do formulário
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Validações
+        if (!validarCampo('nomeProduto', formData.nome)) {
+            mostrarNotificacao(mensagensErro.nomeProduto, 'error');
+            return;
+        }
+        if (!validarCampo('preco', formData.preco)) {
+            mostrarNotificacao(mensagensErro.preco, 'error');
+            return;
+        }
+        if (!validarCampo('estoque', formData.quantidade_estoque)) {
+            mostrarNotificacao(mensagensErro.estoque, 'error');
+            return;
+        }
         setLoading(true);
 
         try {
-            const novoProduto = {
-                id: Date.now(), // ID temporário
-                ...formData,
-                preco: parseFloat(formData.preco),
-                quantidade_estoque: parseInt(formData.quantidade_estoque),
-                data_cadastro: new Date().toISOString()
-            };
+            // Criar FormData para envio com arquivo
+            const formDataToSend = new FormData();
+            formDataToSend.append('nome', formData.nome);
+            formDataToSend.append('descricao', formData.descricao);
+            formDataToSend.append('preco', parseFloat(formData.preco.replace('R$ ', '').replace(',', '.')));
+            formDataToSend.append('quantidade_estoque', parseInt(formData.quantidade_estoque));
+            formDataToSend.append('categoria', formData.categoria);
+            if (formData.imagem) {
+                formDataToSend.append('imagem', formData.imagem);
+            }
 
-            await onAddProduto(novoProduto);
+            await onAddProduto(formDataToSend);
             
             // Limpar formulário
             setFormData({
@@ -51,13 +69,13 @@ const CadastrarItensFornecedor = ({ onAddProduto }) => {
                 preco: '',
                 quantidade_estoque: '',
                 categoria: '',
-                imagem: ''
+                imagem: null
             });
 
-            alert('Produto cadastrado com sucesso!');
+            mostrarNotificacao('Produto cadastrado com sucesso!', 'success');
         } catch (error) {
             console.error('Erro ao cadastrar produto:', error);
-            alert('Erro ao cadastrar produto. Tente novamente.');
+            mostrarNotificacao('Erro ao cadastrar produto. Tente novamente.', 'error');
         } finally {
             setLoading(false);
         }
@@ -76,7 +94,7 @@ const CadastrarItensFornecedor = ({ onAddProduto }) => {
                             id="nome"
                             name="nome"
                             value={formData.nome}
-                            onChange={handleChange}
+                            onChange={(e) => setFormData(prev => ({...prev, nome: aplicarMascara('nomeProduto', e.target.value)}))}
                             required
                             placeholder="Ex: Coca-Cola Lata 350ml"
                         />
@@ -117,27 +135,24 @@ const CadastrarItensFornecedor = ({ onAddProduto }) => {
                     <div className="form-group">
                         <label htmlFor="preco">Preço (R$) *</label>
                         <input
-                            type="number"
+                            type="text"
                             id="preco"
                             name="preco"
                             value={formData.preco}
-                            onChange={handleChange}
-                            step="0.01"
-                            min="0"
+                            onChange={(e) => setFormData(prev => ({...prev, preco: aplicarMascara('preco', e.target.value)}))}
                             required
-                            placeholder="0.00"
+                            placeholder="R$ 0.00"
                         />
                     </div>
 
                     <div className="form-group">
                         <label htmlFor="quantidade_estoque">Quantidade em Estoque *</label>
                         <input
-                            type="number"
+                            type="text"
                             id="quantidade_estoque"
                             name="quantidade_estoque"
                             value={formData.quantidade_estoque}
-                            onChange={handleChange}
-                            min="0"
+                            onChange={(e) => setFormData(prev => ({...prev, quantidade_estoque: aplicarMascara('estoque', e.target.value)}))}
                             required
                             placeholder="0"
                         />
@@ -145,14 +160,13 @@ const CadastrarItensFornecedor = ({ onAddProduto }) => {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="imagem">URL da Imagem</label>
+                    <label htmlFor="imagem">Imagem do Produto</label>
                     <input
-                        type="url"
+                        type="file"
                         id="imagem"
                         name="imagem"
-                        value={formData.imagem}
-                        onChange={handleChange}
-                        placeholder="https://exemplo.com/imagem.jpg"
+                        accept="image/*"
+                        onChange={(e) => setFormData(prev => ({...prev, imagem: e.target.files[0]}))}
                     />
                 </div>
 

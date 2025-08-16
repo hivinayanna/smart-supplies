@@ -4,10 +4,11 @@ import '../../styles/produtoVisualizacao.css';
 
 const host = import.meta.env.REACT_APP_HOST || "http://localhost:8000";
 
-const ProdutoVisualizacao = ({ produtoId }) => {
+const ProdutoVisualizacao = ({ produtoId, mostrarNotificacao }) => {
     const [produto, setProduto] = useState(null);
     const [quantidade, setQuantidade] = useState(1);
     const [redirectToLogin, setRedirectToLogin] = useState(false);
+    const [isFavorito, setIsFavorito] = useState(false);
 
     useEffect(() => {
         const fetchProduto = async () => {
@@ -31,6 +32,8 @@ const ProdutoVisualizacao = ({ produtoId }) => {
                 }
 
                 const produtoData = await response.json();
+                console.log('Produto carregado:', produtoData);
+                console.log('URL da imagem:', produtoData.imagem ? `${host}/${produtoData.imagem}` : 'Sem imagem');
                 setProduto(produtoData);
             } catch (error) {
                 console.error("Erro ao buscar produto:", error);
@@ -49,16 +52,31 @@ const ProdutoVisualizacao = ({ produtoId }) => {
     const aumentar = () => setQuantidade(q => q + 1);
     const diminuir = () => setQuantidade(q => q > 1 ? q - 1 : 1);
     const adicionarAoCarrinho = () => {
-        alert(`Adicionado ${quantidade}x "${produto.nome}" ao carrinho!`);
+        mostrarNotificacao(`Adicionado ${quantidade}x "${produto.nome}" ao carrinho!`, 'success');
+    };
+    
+    const toggleFavorito = () => {
+        setIsFavorito(!isFavorito);
+        mostrarNotificacao(
+            isFavorito ? 'Removido da lista de desejos!' : 'Adicionado a lista de desejos!',
+            'success'
+        );
     };
 
     return (
         <div className="produto-visualizacao">
             <div className="produto-imagem">
                 <img
-                    src={produto.imagem ? `${host}/${produto.imagem}` : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROJGo_BDmE1BQXej-UemTXxZG6RkDsA95ZnA&s"}
+                    src={produto.imagem ? `${host}${produto.imagem.startsWith('/') ? '' : '/'}${produto.imagem}` : "https://res.cloudinary.com/dj5eeszbx/image/upload/v1755180798/sem_imagem_o3vo3n.png"}
                     alt={produto.nome}
+                    onError={(e) => {
+                        console.log('Erro ao carregar imagem:', e.target.src);
+                        e.target.src = "https://res.cloudinary.com/dj5eeszbx/image/upload/v1755180798/sem_imagem_o3vo3n.png";
+                    }}
                 />
+                <button className={`btn-favorito-detalhes ${isFavorito ? 'favorito' : ''}`} onClick={toggleFavorito}>
+                    ♥
+                </button>
             </div>
             <div className="produto-info">
                 <h1>{produto.nome}</h1>
