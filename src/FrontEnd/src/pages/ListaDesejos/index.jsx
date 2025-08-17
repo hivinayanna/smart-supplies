@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import SideNavBar from '../../components/sideNavBar';
 import FavoriteCard from '../../components/favoriteCard';
 import Footer from '../../components/footer';
+import { Navigate } from "react-router-dom";
 import '../../styles/listaDesejos.css';
 
 /**
@@ -15,53 +16,63 @@ import '../../styles/listaDesejos.css';
 function ListaDesejos() {
     const [favoritos, setFavoritos] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [redirectToLogin, setRedirectToLogin] = useState(false);
+    const host = import.meta.env.REACT_APP_HOST || "http://localhost:8000";
 
     // Simular carregamento dos favoritos
     useEffect(() => {
-        // Mock data - substituir por chamada à API
-        const mockFavoritos = [
-            {
-                id: 1,
-                nome: "Coca-Cola Lata 350ml",
-                descricao: "Refrigerante de cola em lata de 350ml",
-                preco: 3.50,
-                quantidade_estoque: 50,
-                imagem: "https://cdn.dooca.store/4309/products/701d27b0222a52d1980f7e84ff282b4c.jpg?v=1653064450",
-                categoria: { nome: "Bebidas" },
-                fornecedor: { nome: "Distribuidora ABC" }
-            },
-            {
-                id: 2,
-                nome: "Água Mineral 500ml",
-                descricao: "Água mineral natural sem gás",
-                preco: 2.00,
-                quantidade_estoque: 100,
-                imagem: "https://cdn.dooca.store/4309/products/701d27b0222a52d1980f7e84ff282b4c.jpg?v=1653064450",
-                categoria: { nome: "Bebidas" },
-                fornecedor: { nome: "Águas do Brasil" }
-            },
-            {
-                id: 3,
-                nome: "Suco de Laranja 1L",
-                descricao: "Suco natural de laranja integral",
-                preco: 8.50,
-                quantidade_estoque: 30,
-                imagem: "https://cdn.dooca.store/4309/products/701d27b0222a52d1980f7e84ff282b4c.jpg?v=1653064450",
-                categoria: { nome: "Bebidas" },
-                fornecedor: { nome: "Sucos Naturais Ltda" }
-            }
-        ];
+        const token = sessionStorage.getItem("accessToken");
 
-        setTimeout(() => {
-            setFavoritos(mockFavoritos);
-            setLoading(false);
-        }, 1000);
+        const fetchData = async () => {
+            if (!token) {
+                // Se não houver token, redireciona para a página de login
+                setRedirectToLogin(true);
+                return;
+            }
+            try {
+                const response = await fetch(`${host}/api/lista-desejos/`, {
+
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (response.status === 401) {
+                    console.log("Unauthorized login");
+                    setRedirectToLogin(true);
+                    return;
+                }
+                let favoritos_json = await response.json();
+                setTimeout(() => {
+                    setFavoritos(favoritos_json);
+                    setLoading(false);
+                }, 1000);
+            } catch (error) {
+                console.error("Erro ao buscar produtos:", error);
+            }
+            // {
+            //     id: 1,
+            //     nome: "Coca-Cola Lata 350ml",
+            //     descricao: "Refrigerante de cola em lata de 350ml",
+            //     preco: 3.50,
+            //     quantidade_estoque: 50,
+            //     imagem: "https://cdn.dooca.store/4309/products/701d27b0222a52d1980f7e84ff282b4c.jpg?v=1653064450",
+            //     categoria: { nome: "Bebidas" },
+            //     fornecedor: { nome: "Distribuidora ABC" }
+            // },
+        }
+        fetchData();
     }, []);
 
     // Handler para remover dos favoritos
     const handleRemoveFavorite = (produtoId) => {
         setFavoritos(prev => prev.filter(produto => produto.id !== produtoId));
     };
+
+    if (redirectToLogin) {
+        return <Navigate to="/Auth?sessionExpired=true" replace />;
+    }
 
     if (loading) {
         return (

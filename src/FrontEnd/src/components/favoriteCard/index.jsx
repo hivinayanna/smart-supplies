@@ -47,7 +47,7 @@ const FavoriteCard = ({ produto, onRemoveFavorite }) => {
             <div className="card-content">
                 <h2>{produto.nome}</h2>
                 <p><strong>Descrição:</strong> {produto.descricao || 'Sem descrição'}</p>
-                <p><strong>Preço:</strong> R$ {produto.preco.toFixed(2)}</p>
+                <p><strong>Preço:</strong> R$ {produto.preco}</p> {/*.toFixed(2)*/}
                 <p><strong>Estoque:</strong> {produto.quantidade_estoque}</p>
                 <p><strong>Categoria:</strong> {produto.categoria?.nome}</p>
                 <p><strong>Fornecedor:</strong> {produto.fornecedor?.nome}</p>
