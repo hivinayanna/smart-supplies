@@ -1,3 +1,5 @@
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import CustomTokenObtainPairSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -16,8 +18,11 @@ from .serializers import (
     CarrinhoSerializer,
     ProdutoResumoSerializer,
     AvaliacaoSerializer,
-    UsuarioUpdateSerializer
+    UsuarioSerializer
 )
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
 # Endpoint para listar produtos
 @api_view(['GET'])
@@ -305,7 +310,7 @@ def historico_vendas(request):
 
 # Alterar perfil
 class AlterarPerfilView(generics.RetrieveUpdateAPIView):
-    serializer_class = UsuarioUpdateSerializer
+    serializer_class = UsuarioSerializer
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
