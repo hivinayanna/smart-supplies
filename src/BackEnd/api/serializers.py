@@ -1,9 +1,30 @@
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from .models import Usuario, Produto, Categoria, Pedido, ItemPedido, Carrinho, ItemCarrinho, ListaDesejos, Avaliacao
 from PIL import Image, ImageOps
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from pathlib import Path
 import io
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        # Adiciona informações extras ao token (payload)
+        token['tipo_conta'] = user.tipo_conta
+        return token
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        # Adiciona informações extras na resposta do login
+        data.update({
+            'id': self.user.id,
+            'username': self.user.username,
+            'email': self.user.email,
+            'nome_completo': self.user.nome_completo,
+            'tipo_conta': self.user.tipo_conta,
+        })
+        return data
 
 # Serializer para exibir informações do usuário
 class UsuarioSerializer(serializers.ModelSerializer):
