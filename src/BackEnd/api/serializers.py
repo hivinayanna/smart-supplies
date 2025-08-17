@@ -178,12 +178,14 @@ class ListaDesejosSerializer(serializers.ModelSerializer):
         model = ListaDesejos
         fields = ['id', 'produto']
 
-class AvaliacaoSerializer(serializers.ModelSerializer):
-    usuario = UsuarioSerializer(read_only=True)
+class ListaDesejosSerializer(serializers.ModelSerializer):
+    produto = ProdutoSerializer(read_only=True)
+    estoque_produto = serializers.IntegerField(source='produto.quantidade_estoque', read_only=True)
+    vendedor = serializers.CharField(source='produto.fornecedor.nome_completo', read_only=True)
 
     class Meta:
-        model = Avaliacao
-        fields = ['id', 'produto', 'usuario', 'nota', 'comentario', 'data']
+        model = ListaDesejos
+        fields = ['id', 'produto', 'estoque_produto', 'vendedor']
 
 # Atualizar perfil
 class UsuarioUpdateSerializer(serializers.ModelSerializer):
