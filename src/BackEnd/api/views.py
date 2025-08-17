@@ -6,12 +6,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import RetrieveAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.exceptions import PermissionDenied 
 from django.db import transaction, IntegrityError
-from django.db.models import Avg
-from .models import Produto, Pedido, ItemPedido, Fornecedor, Usuario, Categoria, Carrinho, ItemCarrinho, ListaDesejos, Avaliacao
+from django.db.models import Avg, Sum, F
+from .models import Produto, Pedido, ItemPedido, Usuario, Categoria, Carrinho, ItemCarrinho, ListaDesejos, Avaliacao, ItemPedido
 from .serializers import (
     ProdutoSerializer,
     PedidoSerializer,
-    FornecedorSerializer,
     CreateUsuarioSerializer,
     CategoriaSerializer,
     CarrinhoSerializer,
@@ -20,7 +19,7 @@ from .serializers import (
     UsuarioUpdateSerializer
 )
 
-# Endpoint para listar produtos, com filtros opcionais por categoria e nome
+# Endpoint para listar produtos
 @api_view(['GET'])
 def listar_produtos(request):
     produtos = Produto.objects.all()
@@ -37,59 +36,27 @@ def listar_produtos(request):
     serializer = ProdutoSerializer(produtos, many=True)
     return Response(serializer.data)
 
-# Endpoint para criação de um novo produto
+# Criar produto
 @api_view(['POST'])
 def criar_produto(request):
-    # Verifica se o usuário está autenticado
     if not request.user.is_authenticated:
         return Response({'erro': 'Autenticação obrigatória.'}, status=status.HTTP_401_UNAUTHORIZED)
     
-    # Verifica se o usuário tem tipo de conta 'vendedor'
     if request.user.tipo_conta != 'vendedor':
         return Response({'erro': 'Apenas usuários do tipo "vendedor" podem criar produtos.'}, status=status.HTTP_403_FORBIDDEN)
     
     serializer = ProdutoSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save(fornecedor=request.user)  # Associa o produto ao usuário autenticado
+        serializer.save(fornecedor=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# View para detalhar um produto específico usando RetrieveAPIView
+# Detalhar produto
 class DetalharProdutoView(RetrieveAPIView):
     queryset = Produto.objects.all()
     serializer_class = ProdutoSerializer
 
-# Endpoint para listar todos os pedidos
-@api_view(['GET'])
-def listar_pedidos(request):
-    pedidos = Pedido.objects.all()
-    serializer = PedidoSerializer(pedidos, many=True)
-    return Response(serializer.data)
-
-# Endpoint para criação de um novo pedido
-@api_view(['POST'])
-def criar_pedido(request):
-    # Verifica se o usuário está autenticado
-    if not request.user.is_authenticated:
-        return Response({'erro': 'Autenticação obrigatória.'}, status=status.HTTP_401_UNAUTHORIZED)
-
-    # Validação incorreta: verifica se é vendedor para criar pedido (provavelmente deveria ser 'cliente')
-    if request.user.tipo_conta != 'vendedor':
-        return Response({'erro': 'Apenas usuários do tipo "vendedor" podem criar produtos.'}, status=status.HTTP_403_FORBIDDEN)
-
-    serializer = PedidoSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save(cliente=request.user)  # Associa o pedido ao usuário autenticado
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-# Endpoint para listar fornecedores
-@api_view(['GET'])
-def listar_fornecedores(request):
-    fornecedores = Fornecedor.objects.all()
-    serializer = FornecedorSerializer(fornecedores, many=True)
-    return Response(serializer.data)
-
+# Listar produtos do fornecedor (usuário vendedor)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def listar_produtos_do_fornecedor(request):
@@ -99,44 +66,42 @@ def listar_produtos_do_fornecedor(request):
     produtos = Produto.objects.filter(fornecedor=request.user)
     serializer = ProdutoSerializer(produtos, many=True)
     return Response(serializer.data)
-# View para criação de novos usuários
+
+# Criar usuário
 class UsuarioCreateView(generics.CreateAPIView):
     queryset = Usuario.objects.all()
     serializer_class = CreateUsuarioSerializer
 
-# View para atualizar e deletar um produto, com verificação de permissão
+# Atualizar/deletar produto
 class ProdutoUpdateDeleteView(RetrieveUpdateDestroyAPIView):
     queryset = Produto.objects.all()
     serializer_class = ProdutoSerializer
     permission_classes = [IsAuthenticated]
 
-    # Garante que apenas o fornecedor do produto pode atualizá-lo
     def perform_update(self, serializer):
         produto = self.get_object()
         if self.request.user != produto.fornecedor:
             raise PermissionDenied('Voce não tem a permissão para atualizar o produto.')
         serializer.save()
 
-    # Garante que apenas o fornecedor do produto pode deletá-lo
     def perform_destroy(self, instance):
         if self.request.user != instance.fornecedor:
             raise PermissionDenied('Voce não tem permissão para deletar o produto.')
         instance.delete()
 
-
-# Endpoint para listar categorias disponíveis
+# Listar categorias
 @api_view(['GET'])
 def listar_categorias(request):
     categorias = Categoria.objects.all()
     serializer = CategoriaSerializer(categorias, many=True)
     return Response(serializer.data)
 
-# Aqui eu obter ou criar o carrinho do usuario(caso ele não tenha)
+# Criar ou obter carrinho
 def get_or_create_cart(user):
     carrinho, created = Carrinho.objects.get_or_create(usuario=user)
     return carrinho
 
-# Ver o carrinho
+# Ver carrinho
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def ver_carrinho(request):
@@ -144,7 +109,7 @@ def ver_carrinho(request):
     serializer = CarrinhoSerializer(carrinho)
     return Response(serializer.data)
 
-#Adicionar item ao carrinho
+# Adicionar item ao carrinho
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def adicionar_ao_carrinho(request):
@@ -168,7 +133,7 @@ def adicionar_ao_carrinho(request):
 
     return Response({'mensagem': 'Produto adicionado ao carrinho com sucesso.'})
 
-# Atualizar quantidade de um item do carrinho
+# Atualizar item do carrinho
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def atualizar_item_carrinho(request, item_id):
@@ -181,7 +146,6 @@ def atualizar_item_carrinho(request, item_id):
     item.save()
     return Response({'mensagem': 'Item atualizado com sucesso.'})
 
-
 # Remover item do carrinho
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
@@ -193,6 +157,7 @@ def remover_item_carrinho(request, item_id):
     except ItemCarrinho.DoesNotExist:
         return Response({'erro': 'Item não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
 
+# Finalizar carrinho
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def finalizar_carrinho(request):
@@ -204,7 +169,6 @@ def finalizar_carrinho(request):
         return Response({'erro': 'Carrinho vazio.'}, status=400)
 
     with transaction.atomic():
-        # Verifica se há estoque suficiente
         for item in itens:
             if item.quantidade > item.produto.quantidade_estoque:
                 return Response(
@@ -228,6 +192,7 @@ def finalizar_carrinho(request):
     serializer = PedidoSerializer(pedido)
     return Response({'mensagem': 'Pedido realizado com sucesso.', 'pedido': serializer.data}, status=201)
 
+# Lista de desejos
 class ListaDesejosView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -247,7 +212,6 @@ class ListaDesejosView(APIView):
         except Produto.DoesNotExist:
             return Response({'erro': 'Produto não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
 
-        # Evita duplicidade
         if ListaDesejos.objects.filter(usuario=request.user, produto=produto).exists():
             return Response({'mensagem': 'Produto já está na lista de desejos.'}, status=status.HTTP_200_OK)
 
@@ -262,6 +226,7 @@ class ListaDesejosView(APIView):
         except ListaDesejos.DoesNotExist:
             return Response({'erro': 'Produto não está na lista de desejos.'}, status=status.HTTP_404_NOT_FOUND)
 
+# Avaliar produto
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def avaliar_produto(request):
@@ -289,7 +254,7 @@ def avaliar_produto(request):
 
     return Response({'mensagem': 'Avaliação registrada com sucesso.'}, status=status.HTTP_201_CREATED)
 
-
+# Insights de vendas e avaliações
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def insights_produto(request, pk):
@@ -304,12 +269,23 @@ def insights_produto(request, pk):
     media_nota = Avaliacao.objects.filter(produto=produto).aggregate(avg=Avg('nota'))['avg']
     total_avaliacoes = Avaliacao.objects.filter(produto=produto).count()
 
+    vendas = ItemPedido.objects.filter(produto=produto).aggregate(
+        quantidade_vendida=Sum('quantidade'),
+        receita_total=Sum(F('quantidade') * F('preco_unitario'))
+    )
+
+    quantidade_vendida = vendas['quantidade_vendida'] or 0
+    receita_total = vendas['receita_total'] or 0
+
     return Response({
         'produto': produto.nome,
         'media_nota': round(media_nota or 0, 2),
-        'total_avaliacoes': total_avaliacoes
+        'total_avaliacoes': total_avaliacoes,
+        'receita_total': float(receita_total),
+        'total_produtos_vendidos': quantidade_vendida
     })
 
+# Histórico de compras
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def historico_compras(request):
@@ -317,6 +293,7 @@ def historico_compras(request):
     serializer = PedidoSerializer(pedidos, many=True)
     return Response(serializer.data)
 
+# Histórico de vendas
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def historico_vendas(request):
@@ -326,6 +303,7 @@ def historico_vendas(request):
     serializer = PedidoSerializer(pedidos, many=True)
     return Response(serializer.data)
 
+# Alterar perfil
 class AlterarPerfilView(generics.RetrieveUpdateAPIView):
     serializer_class = UsuarioUpdateSerializer
     permission_classes = [IsAuthenticated]

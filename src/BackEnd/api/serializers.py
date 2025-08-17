@@ -1,5 +1,9 @@
 from rest_framework import serializers
-from .models import Usuario, Produto, Categoria, Pedido, ItemPedido, Fornecedor, Carrinho, ItemCarrinho, ListaDesejos, Avaliacao
+from .models import Usuario, Produto, Categoria, Pedido, ItemPedido, Carrinho, ItemCarrinho, ListaDesejos, Avaliacao
+from PIL import Image, ImageOps
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from pathlib import Path
+import io
 
 # Serializer para exibir informações do usuário
 class UsuarioSerializer(serializers.ModelSerializer):
@@ -15,7 +19,6 @@ class CreateUsuarioSerializer(serializers.ModelSerializer):
         model = Usuario
         fields = ['id', 'username', 'email', 'password', 'nome_completo', 'telefone', 'endereco', 'tipo_conta']
 
-    # Método sobrescrito para usar create_user e garantir hash da senha
     def create(self, validated_data):
         user = Usuario.objects.create_user(
             username=validated_data['username'],
@@ -36,25 +39,50 @@ class CategoriaSerializer(serializers.ModelSerializer):
 
 # Serializer para exibir e criar produtos
 class ProdutoSerializer(serializers.ModelSerializer):
-    categoria = CategoriaSerializer(read_only=True)  # Representação detalhada da categoria (somente leitura)
-    categoria_id = serializers.PrimaryKeyRelatedField(queryset=Categoria.objects.all(), source='categoria', write_only=True)  # ID usado na criação/edição
-    fornecedor = UsuarioSerializer(read_only=True)  # Representação detalhada do fornecedor
+    categoria = CategoriaSerializer(read_only=True)
+    categoria_id = serializers.PrimaryKeyRelatedField(queryset=Categoria.objects.all(), source='categoria', write_only=True)
+    fornecedor = UsuarioSerializer(read_only=True)
     imagem = serializers.ImageField(required=False)
 
     class Meta:
         model = Produto
         fields = ['id', 'nome', 'descricao', 'preco', 'quantidade_estoque', 'categoria', 'categoria_id', 'fornecedor', 'imagem']
 
+    def _resize_500(self, uploaded):
+        img = Image.open(uploaded)
+        img = ImageOps.exif_transpose(img)
+
+        if img.mode in ('RGBA', 'P'):
+            bg = Image.new('RGB', img.size, (255, 255, 255))
+            if img.mode == 'RGBA':
+                bg.paste(img, mask=img.split()[3])
+            else:
+                bg.paste(img)
+            img = bg
+        else:
+            img = img.convert('RGB')
+
+        img.thumbnail((500, 500), Image.Resampling.LANCZOS)
+
+        buffer = io.BytesIO()
+        img.save(buffer, format='JPEG', quality=85, optimize=True)
+        buffer.seek(0)
+
+        nome = f"{Path(uploaded.name).stem}.jpg"
+        return InMemoryUploadedFile(
+            buffer, field_name='ImageField', name=nome,
+            content_type='image/jpeg', size=buffer.getbuffer().nbytes, charset=None
+        )
+
+    def validate_imagem(self, imagem):
+        if imagem:
+            return self._resize_500(imagem)
+        return imagem
+
 class ProdutoResumoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Produto
         fields = ['id','nome','preco']
-        
-# Serializer para exibir fornecedores
-class FornecedorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Fornecedor
-        fields = ['id', 'nome', 'email', 'telefone', 'endereco']
 
 # Serializer para itens de pedido
 class ItemPedidoSerializer(serializers.ModelSerializer):
@@ -74,9 +102,9 @@ class ClienteResumoSerializer(serializers.ModelSerializer):
         model = Usuario
         fields = ['id', 'username', 'nome_completo']
 
-# Serializer para pedidos com criação customizada de itens
+# Serializer para pedidos
 class PedidoSerializer(serializers.ModelSerializer):
-    itens = ItemPedidoSerializer(many=True, read_only=True)  # Lista de itens incluídos no pedido
+    itens = ItemPedidoSerializer(many=True, read_only=True)
     cliente = ClienteResumoSerializer(read_only=True)
     valor_total = serializers.SerializerMethodField()
 
@@ -87,7 +115,6 @@ class PedidoSerializer(serializers.ModelSerializer):
     def get_valor_total(self, obj):
         return sum(item.quantidade * item.preco_unitario for item in obj.itens.all())
 
-    # Criação personalizada para salvar pedido e itens relacionados
     def create(self, validated_data):
         itens_data = validated_data.pop('itens')
         pedido = Pedido.objects.create(**validated_data)
@@ -95,7 +122,7 @@ class PedidoSerializer(serializers.ModelSerializer):
             ItemPedido.objects.create(pedido=pedido, **item)
         return pedido
 
-# Item do carrinho(exibir e criar)
+# Item do carrinho
 class ItemCarrinhoSerializer(serializers.ModelSerializer):
     produto = ProdutoResumoSerializer(read_only=True)
     produto_id = serializers.PrimaryKeyRelatedField(
@@ -110,7 +137,7 @@ class ItemCarrinhoSerializer(serializers.ModelSerializer):
     def get_subtotal(self, obj):
         return obj.quantidade * obj.preco_unitario
 
-# Carrinho mesmo
+# Carrinho
 class CarrinhoSerializer(serializers.ModelSerializer):
     itens = ItemCarrinhoSerializer(many=True, read_only=True)
     total = serializers.SerializerMethodField()
@@ -136,7 +163,6 @@ class AvaliacaoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Avaliacao
         fields = ['id', 'produto', 'usuario', 'nota', 'comentario', 'data']
-
 
 # Atualizar perfil
 class UsuarioUpdateSerializer(serializers.ModelSerializer):
