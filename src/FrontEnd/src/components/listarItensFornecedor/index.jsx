@@ -23,7 +23,7 @@ const ListarItensFornecedor = ({ produtos, onEditProduto, onDeleteProduto }) => 
     // Filtrar produtos
     const produtosFiltrados = produtos.filter(produto => {
         const matchNome = produto.nome.toLowerCase().includes(filtro.toLowerCase());
-        const matchCategoria = categoriaFiltro === '' || produto.categoria === categoriaFiltro;
+        const matchCategoria = categoriaFiltro === '' || produto.categoria?.nome === categoriaFiltro;
         return matchNome && matchCategoria;
     });
 
@@ -129,13 +129,13 @@ const ListarItensFornecedor = ({ produtos, onEditProduto, onDeleteProduto }) => 
 
                         <div className="produto-info">
                             <h3>{produto.nome}</h3>
-                            <p className="produto-categoria">{produto.categoria}</p>
+                            <p className="produto-categoria">{produto.categoria?.nome}</p>
                             <p className="produto-descricao">
                                 {produto.descricao || 'Sem descrição'}
                             </p>
                             
                             <div className="produto-detalhes">
-                                <span className="produto-preco">R$ {produto.preco.toFixed(2)}</span>
+                                <span className="produto-preco">R$ {produto.preco}</span> {/*.toFixed(2)*/}
                                 <span className="produto-estoque">
                                     Estoque: {produto.quantidade_estoque}
                                 </span>

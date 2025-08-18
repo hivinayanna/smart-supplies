@@ -5,6 +5,7 @@ import ListarItensFornecedor from '../../components/listarItensFornecedor';
 import Footer from '../../components/footer';
 import Notificacao from '../../components/notificacao';
 import { useNotificacao } from '../../hooks/useNotificacao';
+import { Navigate } from "react-router-dom";
 import '../../styles/meusProdutos.css';
 
 /**
@@ -18,38 +19,54 @@ function MeusProdutos() {
     const [produtos, setProdutos] = useState([]);
     const [loading, setLoading] = useState(true);
     const { notificacao, mostrarNotificacao, fecharNotificacao } = useNotificacao();
+    const [redirectToLogin, setRedirectToLogin] = useState(false);
+    const host = import.meta.env.REACT_APP_HOST || "http://localhost:8000";
+    const token = sessionStorage.getItem("accessToken");
 
     // Simular carregamento dos produtos
     useEffect(() => {
-        // Mock data - substituir por chamada à API
-        const mockProdutos = [
-            {
-                id: 1,
-                nome: "Coca-Cola Lata 350ml",
-                descricao: "Refrigerante de cola em lata de 350ml",
-                preco: 3.50,
-                quantidade_estoque: 100,
-                categoria: "bebidas",
-                imagem: "https://res.cloudinary.com/dj5eeszbx/image/upload/v1755180798/sem_imagem_o3vo3n.png",
-                data_cadastro: "2024-01-15T10:30:00Z"
-            },
-            {
-                id: 2,
-                nome: "Água Mineral 500ml",
-                descricao: "Água mineral natural sem gás",
-                preco: 2.00,
-                quantidade_estoque: 200,
-                categoria: "bebidas",
-                imagem: "https://res.cloudinary.com/dj5eeszbx/image/upload/v1755180798/sem_imagem_o3vo3n.png",
-                data_cadastro: "2024-01-14T14:20:00Z"
-            }
-        ];
+        
+        const fetchData = async () => {
+        
+        if (!token) {
+            // Se não houver token, redireciona para a página de login
+            setRedirectToLogin(true);
+            return;
+        }
 
-        setTimeout(() => {
-            setProdutos(mockProdutos);
-            setLoading(false);
-        }, 1000);
+        try {
+            const response = await fetch(`${host}/api/fornecedor/produtos/`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+            });
+
+            if (response.status === 401) {
+                console.log("Unauthorized login");
+                setRedirectToLogin(true);
+                return;
+            }
+
+            let produtos_vendedor = await response.json();
+            
+            setTimeout(() => {
+                setProdutos(produtos_vendedor);
+                setLoading(false);
+            }, 1000);
+        } catch (error) {
+            console.log(error)
+            mostrarNotificacao(`Erro ao buscar produtos. Tente novamente mais tarde.`, "error");
+        }
+        };
+
+        fetchData();
     }, []);
+
+    if (redirectToLogin) {
+        return <Navigate to="/Auth?sessionExpired=true" replace />;
+    }
 
     // Handler para adicionar novo produto
     const handleAddProduto = async (formDataProduto) => {
@@ -58,32 +75,59 @@ function MeusProdutos() {
         
         // Converter FormData para objeto
         const novoProduto = {
-            id: Date.now(),
+            //id: Date.now(),
             nome: formDataProduto.get('nome'),
             descricao: formDataProduto.get('descricao'),
             preco: parseFloat(formDataProduto.get('preco')),
             quantidade_estoque: parseInt(formDataProduto.get('quantidade_estoque')),
-            categoria: formDataProduto.get('categoria'),
+            categoria_id: formDataProduto.get('categoria'),
             imagem: formDataProduto.get('imagem') ? URL.createObjectURL(formDataProduto.get('imagem')) : null,
-            data_cadastro: new Date().toISOString()
+            //data_cadastro: new Date().toISOString()
         };
         
         setProdutos(prev => [...prev, novoProduto]);
     };
 
     // Handler para editar produto
-    const handleEditProduto = (produtoAtualizado) => {
-        setProdutos(prev => 
-            prev.map(produto => 
-                produto.id === produtoAtualizado.id ? produtoAtualizado : produto
-            )
-        );
-        mostrarNotificacao('Produto atualizado com sucesso!', 'success');
+    const handleEditProduto = async (produtoAtualizado) => {
+        try {
+            await fetch(`${host}/api/produtos/${produtoAtualizado.id}/`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ produtoAtualizado })
+            });
+            setProdutos(prev => 
+                prev.map(produto => 
+                    produto.id === produtoAtualizado.id ? produtoAtualizado : produto
+                )
+            );
+            mostrarNotificacao('Produto atualizado com sucesso!', 'success');
+        } catch (error){
+            console.log("Error on product deletion:", error)
+            mostrarNotificacao("Erro ao deletar produto.", "error")
+        }
     };
 
     // Handler para deletar produto
-    const handleDeleteProduto = (produtoId) => {
+    const handleDeleteProduto = async (produtoId) => {
+        try {
+            await fetch(`${host}/api/produtos/${produtoId}/`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
         setProdutos(prev => prev.filter(produto => produto.id !== produtoId));
+        mostrarNotificacao("produto deletado com sucesso!", "success")
+
+        } catch (error){
+            console.log("Error on product deletion:", error)
+            mostrarNotificacao("Erro ao deletar produto.", "error")
+        }
     };
 
     if (loading) {

@@ -80,7 +80,7 @@ function Login({ mostrarNotificacao }) {
 
         if (response.data.access) {
           console.log(`token: ${response.data.access}`);
-          sessionStorage.setItem("tipoUsuario", response.data.tipo_usuario);
+          sessionStorage.setItem("tipoUsuario", response.data.tipo_conta);
           sessionStorage.setItem("accessToken", response.data.access);
           redirect(`/start`);
         }
