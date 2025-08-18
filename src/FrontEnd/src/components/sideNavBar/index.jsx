@@ -43,6 +43,12 @@ function SideNavBar({ tipoUsuario }) {
           </Link>
         </li>
         <li>
+          <Link to="/historico">
+            <span className="material-symbols-outlined">history</span>
+            {isVendedor ? "Histórico de Vendas" : "Histórico de Compras"}
+          </Link>
+        </li>
+        <li>
           <Link to="/">
             <span className="material-symbols-outlined">manage_accounts</span>
             Configurações
