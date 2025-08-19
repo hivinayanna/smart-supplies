@@ -5,12 +5,14 @@ from .models import Usuario, Produto, Categoria, Pedido, ItemPedido, Carrinho, L
 # Registro customizado do modelo Usuario no admin do Django
 @admin.register(Usuario)
 class CustomUserAdmin(BaseUserAdmin):
-    model = Usuario
+    model = Usuario # Define que este admin gerencia o modelo Usuario
 
-    list_display = ('username', 'nome_completo', 'telefone', 'endereco', 'tipo_conta', 'is_staff')
-    list_filter = ('tipo_conta', 'is_staff', 'is_active', 'is_superuser')
-    search_fields = ('username', 'nome_completo', 'telefone', 'email')
+    list_display = ('username', 'nome_completo', 'telefone', 'endereco', 'tipo_conta', 'is_staff') # Campos exibidos na lista de usuários do admin
+    list_filter = ('tipo_conta', 'is_staff', 'is_active', 'is_superuser') # Filtros exibidos na lateral direita para facilitar a busca
+    search_fields = ('username', 'nome_completo', 'telefone', 'email')  # Campos que podem ser pesquisados na barra de busca do admin
 
+    # Campos exibidos na página de edição de um usuário
+    # Herda os fieldsets do UserAdmin e adiciona mais um grupo
     fieldsets = BaseUserAdmin.fieldsets + (
         ('Informações adicionais', {
             'fields': (
