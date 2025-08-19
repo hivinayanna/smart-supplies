@@ -17,7 +17,7 @@ from .serializers import (
     CategoriaSerializer,
     CarrinhoSerializer,
     ProdutoResumoSerializer,
-    AvaliacaoSerializer,
+    #AvaliacaoSerializer,
     UsuarioSerializer
 )
 

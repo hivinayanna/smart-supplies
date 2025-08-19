@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import "../../styles/historicoCompras.css";
+import Notificacao from '../../components/notificacao';
+import { useNotificacao } from '../../hooks/useNotificacao';
 
 const HistoricoCompras = () => {
   const [pedidos, setPedidos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  //const [error, setError] = useState(null);
+  const { notificacao, mostrarNotificacao, fecharNotificacao } = useNotificacao();
   const [redirectToLogin, setRedirectToLogin] = useState(false);
   const [filtro, setFiltro] = useState("todos"); // todos, mes, semana
+  const host = import.meta.env.REACT_APP_HOST || "http://localhost:8000";
 
   const tipoUsuario = sessionStorage.getItem("tipoUsuario");
   const isVendedor = tipoUsuario === "vendedor";
@@ -23,34 +27,27 @@ const HistoricoCompras = () => {
         setRedirectToLogin(true);
         return;
       }
-      const mockPedidos = [
-        {
-          id: 1,
-          data: "2025-08-14",
-          status: "Entregue",
-          total: 150.0,
-          itens: [
-            { nome: "Coca-Cola 2L", quantidade: 2, preco: 8.0 },
-            { nome: "Água Mineral 500ml", quantidade: 5, preco: 2.0 },
-          ],
+      const response = await fetch(`${host}/api/fornecedor/produtos/`, {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
         },
-        {
-          id: 2,
-          data: "2025-08-13",
-          status: "Em andamento",
-          total: 300.0,
-          itens: [
-            { nome: "Cerveja Artesanal", quantidade: 10, preco: 15.0 },
-            { nome: "Suco Natural 1L", quantidade: 3, preco: 10.0 },
-          ],
-        },
-      ];
+      });
 
-      setPedidos(mockPedidos);
+      if (response.status === 401) {
+        console.log("Unauthorized login");
+        setRedirectToLogin(true);
+        return;
+      }
+
+      let pedidos = await response.json();
+      setPedidos(Array.isArray(pedidos) ? pedidos : []);
+      console.log("Histórico carregado com sucesso!")
       setLoading(false);
     } catch (error) {
       console.error("Erro ao carregar histórico:", error);
-      setError("Erro ao carregar o histórico. Tente novamente mais tarde.");
+      mostrarNotificacao("Erro ao carregar o histórico. Tente novamente mais tarde.", "error");
       setLoading(false);
     }
   };
@@ -63,9 +60,9 @@ const HistoricoCompras = () => {
     return <div className="historico-loading">Carregando histórico...</div>;
   }
 
-  if (error) {
-    return <div className="historico-error">{error}</div>;
-  }
+  // if (error) {
+  //   return <div className="historico-error">{error}</div>;
+  // }
 
   return (
     <div className="historico-container">
@@ -88,8 +85,8 @@ const HistoricoCompras = () => {
           <div key={pedido.id} className="pedido-card">
             <div className="pedido-header">
               <h3>Pedido #{pedido.id}</h3>
-              <span className={`status-tag ${pedido.status.toLowerCase().replace(' ', '-')}`}>
-                {pedido.status}
+              <span className={`status-tag ${(pedido.status || 'Concluído').toLowerCase().replace(' ', '-')}`}>
+                {pedido.status || 'Concluído'}
               </span>
             </div>
 
