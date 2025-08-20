@@ -27,7 +27,7 @@ const HistoricoCompras = () => {
         setRedirectToLogin(true);
         return;
       }
-      const response = await fetch(`${host}/api/fornecedor/produtos/`, {
+      const response = await fetch(`${host}/api/historico/compras/`, {
         method: "GET",
         headers: {
             Authorization: `Bearer ${token}`,
@@ -43,7 +43,7 @@ const HistoricoCompras = () => {
 
       let pedidos = await response.json();
       setPedidos(Array.isArray(pedidos) ? pedidos : []);
-      console.log("Histórico carregado com sucesso!")
+      console.log("Histórico carregado com sucesso!, body:", pedidos)
       setLoading(false);
     } catch (error) {
       console.error("Erro ao carregar histórico:", error);
@@ -94,7 +94,7 @@ const HistoricoCompras = () => {
               <p className="data">
                 Data: {new Date(pedido.data).toLocaleDateString()}
               </p>
-              <p className="total">Total: R$ {pedido.total.toFixed(2)}</p>
+              <p className="total">Total: R$ {pedido.valor_total}</p> {/* .toFixed(2) */}
             </div>
 
             <div className="pedido-itens">
@@ -102,8 +102,8 @@ const HistoricoCompras = () => {
               <ul>
                 {pedido.itens.map((item, index) => (
                   <li key={index}>
-                    {item.quantidade}x {item.nome} - R${" "}
-                    {(item.quantidade * item.preco).toFixed(2)}
+                    {item.quantidade}x {item.produto.nome} - R${" "}
+                    {(item.quantidade * item.produto.preco)} {/* .toFixed(2) */}
                   </li>
                 ))}
               </ul>

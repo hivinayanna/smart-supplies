@@ -35,7 +35,7 @@ const ListarItensFornecedor = ({ produtos, onEditProduto, onDeleteProduto }) => 
             descricao: produto.descricao || '',
             preco: produto.preco.toString(),
             quantidade_estoque: produto.quantidade_estoque.toString(),
-            categoria: produto.categoria,
+            categoria_id: produto.categoria.id,
             imagem: produto.imagem || ''
         });
         setModalAberto(true);
@@ -197,11 +197,11 @@ const ListarItensFornecedor = ({ produtos, onEditProduto, onDeleteProduto }) => 
                                         onChange={handleFormChange}
                                         required
                                     >
-                                        <option value="bebidas">Bebidas</option>
-                                        <option value="alimentos">Alimentos</option>
-                                        <option value="limpeza">Limpeza</option>
-                                        <option value="higiene">Higiene</option>
-                                        <option value="outros">Outros</option>
+                                    {categorias.map(categoria => (
+                                        <option key={categoria.id} value={categoria.id}>
+                                            {categoria.nome}
+                                        </option>
+                                    ))}
                                     </select>
                                 </div>
                             </div>

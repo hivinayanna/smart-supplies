@@ -75,29 +75,31 @@ function MeusProdutos() {
             await new Promise(resolve => setTimeout(resolve, 500));
             
             // Converter FormData para objeto
-            const novoProduto = {
-                //id: Date.now(),
-                nome: formDataProduto.get('nome'),
-                descricao: formDataProduto.get('descricao'),
-                preco: parseFloat(formDataProduto.get('preco')),
-                quantidade_estoque: parseInt(formDataProduto.get('quantidade_estoque')),
-                categoria_id: formDataProduto.get('categoria'),
-                imagem: formDataProduto.get('imagem') ? URL.createObjectURL(formDataProduto.get('imagem')) : null,
-                //data_cadastro: new Date().toISOString()
-            };
+            // const novoProduto = {
+            //     //id: Date.now(),
+            //     nome: formDataProduto.get('nome'),
+            //     descricao: formDataProduto.get('descricao'),
+            //     preco: parseFloat(formDataProduto.get('preco')),
+            //     quantidade_estoque: parseInt(formDataProduto.get('quantidade_estoque')),
+            //     categoria_id: formDataProduto.get('categoria'),
+            //     imagem: formDataProduto.get('imagem') ? URL.createObjectURL(formDataProduto.get('imagem')) : null,
+            //     //data_cadastro: new Date().toISOString()
+            // };
+            console.log("body:", formDataProduto)
 
-            await fetch(`${host}/api/produtos/${produtoAtualizado.id}/`, {
+            const response = await fetch(`${host}/api/produtos/criar/`, {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
+                    'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify( novoProduto )
+                body: formDataProduto
             });
             mostrarNotificacao("Produto cadastrado com sucesso!", "success")
-            setProdutos(prev => [...prev, novoProduto]);
+            console.log("Reponse:", response.json())
+            setProdutos(prev => [...prev, formDataProduto]);
         } catch (error) {
             console.log("Erro ao cadastrar produto:", error)
+            console.log("Reponse:", response.json())
             mostrarNotificacao("Erro ao cadastrar produto.", "error")
         }
     };

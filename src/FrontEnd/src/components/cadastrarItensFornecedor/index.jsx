@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import '../../styles/cadastrarItensFornecedor.css';
 import { validarCampo, mensagensErro, aplicarMascara } from '../../utils/validacao';
@@ -10,6 +10,38 @@ import { validarCampo, mensagensErro, aplicarMascara } from '../../utils/validac
  * @returns {JSX.Element} Elemento JSX do formulário de cadastro
  */
 const CadastrarItensFornecedor = ({ onAddProduto, mostrarNotificacao }) => {
+    const [categorias, setCategorias] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const token = sessionStorage.getItem("accessToken");
+                const host = import.meta.env.REACT_APP_HOST || "http://localhost:8000";
+                if (!token) {
+                    setRedirectToLogin(true);
+                    return;
+                }
+                const response = await fetch(`${host}/api/categorias/`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                let categorias = await response.json()
+                console.log("Categorias: ", categorias)
+
+                setTimeout(() => {
+                    setCategorias(categorias);
+                }, 100);
+            } catch (error){
+                console.error("Erro ao carregar categorias:", error);
+            }
+        }
+        fetchData();
+    }, []);
+
     const [formData, setFormData] = useState({
         nome: '',
         descricao: '',
@@ -23,6 +55,7 @@ const CadastrarItensFornecedor = ({ onAddProduto, mostrarNotificacao }) => {
     // Handler para mudanças nos inputs
     const handleChange = (e) => {
         const { name, value } = e.target;
+        console.log("Labubu morango do amor", value)
         setFormData(prev => ({
             ...prev,
             [name]: value
@@ -55,7 +88,7 @@ const CadastrarItensFornecedor = ({ onAddProduto, mostrarNotificacao }) => {
             formDataToSend.append('descricao', formData.descricao);
             formDataToSend.append('preco', parseFloat(formData.preco.replace('R$ ', '').replace(',', '.')));
             formDataToSend.append('quantidade_estoque', parseInt(formData.quantidade_estoque));
-            formDataToSend.append('categoria', formData.categoria);
+            formDataToSend.append('categoria_id', formData.categoria);
             if (formData.imagem) {
                 formDataToSend.append('imagem', formData.imagem);
             }
@@ -63,14 +96,14 @@ const CadastrarItensFornecedor = ({ onAddProduto, mostrarNotificacao }) => {
             await onAddProduto(formDataToSend);
             
             // Limpar formulário
-            setFormData({
-                nome: '',
-                descricao: '',
-                preco: '',
-                quantidade_estoque: '',
-                categoria: '',
-                imagem: null
-            });
+            // setFormData({
+            //     nome: '',
+            //     descricao: '',
+            //     preco: '',
+            //     quantidade_estoque: '',
+            //     categoria: '',
+            //     imagem: null
+            // });
 
             mostrarNotificacao('Produto cadastrado com sucesso!', 'success');
         } catch (error) {
@@ -110,11 +143,11 @@ const CadastrarItensFornecedor = ({ onAddProduto, mostrarNotificacao }) => {
                             required
                         >
                             <option value="">Selecione uma categoria</option>
-                            <option value="bebidas">Bebidas</option>
-                            <option value="alimentos">Alimentos</option>
-                            <option value="limpeza">Limpeza</option>
-                            <option value="higiene">Higiene</option>
-                            <option value="outros">Outros</option>
+                            {categorias.map(categoria => (
+                                <option key={categoria.id} value={categoria.id}>
+                                    {categoria.nome}
+                                </option>
+                            ))}
                         </select>
                     </div>
                 </div>

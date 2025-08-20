@@ -23,12 +23,12 @@ class Usuario(AbstractUser):
         default=COMPRADOR,
     )
 
-    def __str__(self):
+    def __str__(self): # Método que define como o usuário será exibido como texto
         return f'{self.username} ({self.tipo_conta}) - {self.nome_completo}'
 
 # Modelo para categorizar produtos
 class Categoria(models.Model):
-    nome = models.CharField(max_length=50, unique=True)
+    nome = models.CharField(max_length=50, unique=True) # Nome da categoria, único no banco
 
     def __str__(self):
         return self.nome
@@ -48,7 +48,7 @@ class Produto(models.Model):
 
 # Modelo que representa um pedido feito por um cliente
 class Pedido(models.Model):
-    cliente = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='pedidos')
+    cliente = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='pedidos') # Cliente que fez o pedido
     data = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -56,8 +56,8 @@ class Pedido(models.Model):
 
 # Modelo que representa um item dentro de um pedido
 class ItemPedido(models.Model):
-    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE, related_name='itens')
-    produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
+    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE, related_name='itens') # Pedido no qual pertence
+    produto = models.ForeignKey(Produto, on_delete=models.CASCADE) # Produto associado ao item
     quantidade = models.PositiveIntegerField()
     preco_unitario = models.DecimalField(max_digits=10, decimal_places=2)
 
@@ -68,7 +68,7 @@ class ItemPedido(models.Model):
         return f'{self.quantidade} x {self.produto.nome} - Pedido {self.pedido.id}'
     
 class Carrinho(models.Model):
-    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='carrinho')
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='carrinho') # Cada usuário tem um carrinho único
     criado_em = models.DateTimeField(auto_now_add=True)
     atualizado_em = models.DateTimeField(auto_now=True)
 
@@ -95,7 +95,7 @@ class ListaDesejos(models.Model):
     produto = models.ForeignKey('Produto', on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ('usuario', 'produto')
+        unique_together = ('usuario', 'produto') # Garante que o mesmo produto não seja adicionado duas vezes para o mesmo usuário
 
     def __str__(self):
         return f'{self.usuario.username} - {self.produto.nome}'
