@@ -6,6 +6,7 @@ import '../../styles/listarItensFornecedor.css';
 // Constantes
 const PLACEHOLDER_IMAGE = "https://via.placeholder.com/150x150.png?text=Produto";
 const API_BASE_URL = 'http://localhost:8000/api';
+const token = sessionStorage.getItem("accessToken");
 
 /**
  * Componente ListarItensFornecedor - Lista produtos cadastrados pelo fornecedor
@@ -27,7 +28,11 @@ const ListarItensFornecedor = ({ produtos, onEditProduto, onDeleteProduto }) => 
     useEffect(() => {
         const fetchCategorias = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/categorias/`);
+                const response = await axios.get(`${API_BASE_URL}/categorias/`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
                 setCategorias(response.data);
             } catch (error) {
                 console.error('Erro ao buscar categorias:', error);
