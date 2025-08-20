@@ -8,6 +8,7 @@ const ProdutoCard = ({ produto, mostrarNotificacao }) => {
     const [redirectToLogin, setRedirectToLogin] = useState(false);
     const [quantidade, setQuantidade] = useState(1);
     const [isFavorito, setIsFavorito] = useState(false);
+    const host = import.meta.env.REACT_APP_HOST || "http://localhost:8000";
 
     if (!produto) {
         console.log('Produto não encontrado:', produto);
@@ -16,14 +17,47 @@ const ProdutoCard = ({ produto, mostrarNotificacao }) => {
 
     const aumentar = () => setQuantidade((q) => q + 1);
     const diminuir = () => setQuantidade((q) => (q > 1 ? q - 1 : 1));
+
+    const token = sessionStorage.getItem("accessToken");
+
+    if (!token) {
+        setRedirectToLogin(true);
+        return;
+    }
     
-    const toggleFavorito = () => {
+   const toggleFavorito = async () => {
+    try {
+        if (isFavorito) {
+            // Remove dos favoritos - DELETE
+            await fetch(`${host}/api/lista-desejos/${produto.id}/`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+        } else {
+            // Adiciona aos favoritos - POST
+            await fetch(`${host}/api/lista-desejos/`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ produto_id: produto.id })
+            });
+        }
+
         setIsFavorito(!isFavorito);
         mostrarNotificacao(
             isFavorito ? 'Removido da lista de desejos!' : 'Adicionado a lista de desejos!',
             'success'
         );
-    };
+    } catch(error) {
+        mostrarNotificacao(`Erro ao adicionar/remover dos favoritos: ${error}`, 'error');
+    }
+};
+
     const adicionarAoCarrinho = async () => {
         if (produto.quantidade_estoque === 0) {
             mostrarNotificacao('Produto sem estoque!', 'error');
@@ -31,41 +65,10 @@ const ProdutoCard = ({ produto, mostrarNotificacao }) => {
         }
         
         try {
-            const host = import.meta.env.REACT_APP_HOST || "http://localhost:8000";
             const token = sessionStorage.getItem("accessToken");
-
-            if (!token) {
-                // Se não houver token, redireciona para a página de login
-                setRedirectToLogin(true);
-                return;
-            }
             
-            const novoEstoque = produto.quantidade_estoque - quantidade;
-            console.log(`PUT BODY: ${JSON.stringify({
-                    nome: produto.nome,
-                    descricao: produto.descricao,
-                    preco: produto.preco,
-                    quantidade_estoque: novoEstoque,
-                    categoria_id: produto.categoria.id,
-                    fornecedor_id: produto.fornecedor.id
-                })}`)
-            await fetch(`${host}/api/produtos/${produto.id}/`, {
-                method: 'PUT',
-                headers: { 
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json' 
-                },
-                body: JSON.stringify({
-                    nome: produto.nome,
-                    descricao: produto.descricao,
-                    preco: produto.preco,
-                    quantidade_estoque: novoEstoque,
-                    categoria_id: produto.categoria.id,
-                    fornecedor_id: produto.fornecedor.id
-                })
-            });
             console.log(`body carrinho: ${JSON.stringify({ produto_id: produto.id, quantidade })}`)
-            await fetch('http://127.0.0.1:8000/api/carrinho/adicionar/', {
+            await fetch(`${host}/api/carrinho/adicionar/`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
