@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import '../../styles/listarItensFornecedor.css';
 
 // Constantes
 const PLACEHOLDER_IMAGE = "https://via.placeholder.com/150x150.png?text=Produto";
+const API_BASE_URL = 'http://localhost:8000/api';
 
 /**
  * Componente ListarItensFornecedor - Lista produtos cadastrados pelo fornecedor
@@ -16,14 +18,28 @@ const PLACEHOLDER_IMAGE = "https://via.placeholder.com/150x150.png?text=Produto"
 const ListarItensFornecedor = ({ produtos, onEditProduto, onDeleteProduto }) => {
     const [filtro, setFiltro] = useState('');
     const [categoriaFiltro, setCategoriaFiltro] = useState('');
+    const [categorias, setCategorias] = useState([]);
     const [modalAberto, setModalAberto] = useState(false);
     const [produtoEditando, setProdutoEditando] = useState(null);
     const [formData, setFormData] = useState({});
 
+    // Buscar categorias do backend
+    useEffect(() => {
+        const fetchCategorias = async () => {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/categorias/`);
+                setCategorias(response.data);
+            } catch (error) {
+                console.error('Erro ao buscar categorias:', error);
+            }
+        };
+        fetchCategorias();
+    }, []);
+
     // Filtrar produtos
     const produtosFiltrados = produtos.filter(produto => {
-        const matchNome = produto.nome.toLowerCase().includes(filtro.toLowerCase());
-        const matchCategoria = categoriaFiltro === '' || produto.categoria?.nome === categoriaFiltro;
+        const matchNome = produto.nome?.toLowerCase().includes(filtro.toLowerCase());
+        const matchCategoria = categoriaFiltro === '' || produto.categoria?.id.toString() === categoriaFiltro;
         return matchNome && matchCategoria;
     });
 
@@ -43,20 +59,27 @@ const ListarItensFornecedor = ({ produtos, onEditProduto, onDeleteProduto }) => 
 
     // Handler para mudanças no formulário
     const handleFormChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        const { name, value, files } = e.target;
+        if (name === 'imagem' && files) {
+            setFormData(prev => ({ ...prev, [name]: files[0] }));
+        } else {
+            setFormData(prev => ({ ...prev, [name]: value }));
+        }
     };
 
     // Handler para salvar edição
     const handleSalvarEdicao = (e) => {
         e.preventDefault();
-        const produtoAtualizado = {
-            ...produtoEditando,
-            ...formData,
-            preco: parseFloat(formData.preco),
-            quantidade_estoque: parseInt(formData.quantidade_estoque)
-        };
-        onEditProduto(produtoAtualizado);
+        const formDataToSend = new FormData();
+        formDataToSend.append('nome', formData.nome);
+        formDataToSend.append('descricao', formData.descricao);
+        formDataToSend.append('preco', parseFloat(formData.preco));
+        formDataToSend.append('quantidade_estoque', parseInt(formData.quantidade_estoque));
+        formDataToSend.append('categoria_id', formData.categoria_id);
+        if (formData.imagem instanceof File) {
+            formDataToSend.append('imagem', formData.imagem);
+        }
+        onEditProduto(produtoEditando.id, formDataToSend);
         setModalAberto(false);
         setProdutoEditando(null);
     };
@@ -107,11 +130,11 @@ const ListarItensFornecedor = ({ produtos, onEditProduto, onDeleteProduto }) => 
                         className="filtro-categoria"
                     >
                         <option value="">Todas as categorias</option>
-                        <option value="bebidas">Bebidas</option>
-                        <option value="alimentos">Alimentos</option>
-                        <option value="limpeza">Limpeza</option>
-                        <option value="higiene">Higiene</option>
-                        <option value="outros">Outros</option>
+                        {categorias.map(categoria => (
+                            <option key={categoria.id} value={categoria.id}>
+                                {categoria.nome}
+                            </option>
+                        ))}
                     </select>
                 </div>
             </div>
@@ -192,16 +215,16 @@ const ListarItensFornecedor = ({ produtos, onEditProduto, onDeleteProduto }) => 
                                 <div className="form-group">
                                     <label>Categoria *</label>
                                     <select
-                                        name="categoria"
-                                        value={formData.categoria}
+                                        name="categoria_id"
+                                        value={formData.categoria_id}
                                         onChange={handleFormChange}
                                         required
                                     >
-                                    {categorias.map(categoria => (
-                                        <option key={categoria.id} value={categoria.id}>
-                                            {categoria.nome}
-                                        </option>
-                                    ))}
+                                        {categorias.map(categoria => (
+                                            <option key={categoria.id} value={categoria.id}>
+                                                {categoria.nome}
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
                             </div>
@@ -243,11 +266,11 @@ const ListarItensFornecedor = ({ produtos, onEditProduto, onDeleteProduto }) => 
                             </div>
 
                             <div className="form-group">
-                                <label>URL da Imagem</label>
+                                <label>Imagem do Produto</label>
                                 <input
-                                    type="url"
+                                    type="file"
                                     name="imagem"
-                                    value={formData.imagem}
+                                    accept="image/*"
                                     onChange={handleFormChange}
                                 />
                             </div>
@@ -274,9 +297,9 @@ ListarItensFornecedor.propTypes = {
         id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
         nome: PropTypes.string.isRequired,
         descricao: PropTypes.string,
-        preco: PropTypes.number.isRequired,
-        quantidade_estoque: PropTypes.number.isRequired,
-        categoria: PropTypes.string.isRequired,
+        preco: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+        quantidade_estoque: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+        categoria: PropTypes.object.isRequired,
         imagem: PropTypes.string
     })).isRequired,
     onEditProduto: PropTypes.func.isRequired,

@@ -94,9 +94,12 @@ function MeusProdutos() {
                 },
                 body: formDataProduto
             });
-            mostrarNotificacao("Produto cadastrado com sucesso!", "success")
-            console.log("Reponse:", response.json())
-            setProdutos(prev => [...prev, formDataProduto]);
+            
+            if (response.ok) {
+                const novoProduto = await response.json();
+                setProdutos(prev => [...prev, novoProduto]);
+                mostrarNotificacao("Produto cadastrado com sucesso!", "success");
+            }
         } catch (error) {
             console.log("Erro ao cadastrar produto:", error)
             console.log("Reponse:", response.json())
@@ -105,25 +108,28 @@ function MeusProdutos() {
     };
 
     // Handler para editar produto
-    const handleEditProduto = async (produtoAtualizado) => {
+    const handleEditProduto = async (produtoId, formData) => {
         try {
-            await fetch(`${host}/api/produtos/${produtoAtualizado.id}/`, {
+            const response = await fetch(`${host}/api/produtos/${produtoId}/`, {
                 method: 'PUT',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
+                    'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ produtoAtualizado })
+                body: formData
             });
-            setProdutos(prev => 
-                prev.map(produto => 
-                    produto.id === produtoAtualizado.id ? produtoAtualizado : produto
-                )
-            );
-            mostrarNotificacao('Produto atualizado com sucesso!', 'success');
+            
+            if (response.ok) {
+                const produtoAtualizado = await response.json();
+                setProdutos(prev => 
+                    prev.map(produto => 
+                        produto.id === produtoId ? produtoAtualizado : produto
+                    )
+                );
+                mostrarNotificacao('Produto atualizado com sucesso!', 'success');
+            }
         } catch (error){
-            console.log("Error on product deletion:", error)
-            mostrarNotificacao("Erro ao deletar produto.", "error")
+            console.log("Error on product update:", error)
+            mostrarNotificacao("Erro ao atualizar produto.", "error")
         }
     };
 

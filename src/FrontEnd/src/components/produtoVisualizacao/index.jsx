@@ -67,7 +67,7 @@ const ProdutoVisualizacao = ({ produtoId, mostrarNotificacao }) => {
         <div className="produto-visualizacao">
             <div className="produto-imagem">
                 <img
-                    src={produto.imagem ? `${host}${produto.imagem.startsWith('/') ? '' : '/'}${produto.imagem}` : "https://res.cloudinary.com/dj5eeszbx/image/upload/v1755180798/sem_imagem_o3vo3n.png"}
+                    src={produto.imagem || "https://res.cloudinary.com/dj5eeszbx/image/upload/v1755180798/sem_imagem_o3vo3n.png"}
                     alt={produto.nome}
                     onError={(e) => {
                         console.log('Erro ao carregar imagem:', e.target.src);

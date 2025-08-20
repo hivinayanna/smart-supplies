@@ -32,8 +32,8 @@ const CarrinhoItem = ({ item, onUpdateQuantity, onRemove }) => {
         <div className="carrinho-item">
             <div className="item-image">
                 <img
-                    src={item.imagem || PLACEHOLDER_IMAGE}
-                    alt={item.nome}
+                    src={item.produto?.imagem || PLACEHOLDER_IMAGE}
+                    alt={item.produto?.nome || item.nome}
                     loading="lazy"
                 />
             </div>
