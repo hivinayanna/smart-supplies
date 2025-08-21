@@ -67,12 +67,11 @@ function ListaDesejos() {
                     'Content-Type': 'application/json'
                 }
             });
-        setFavoritos(prev => prev.filter(produto => produto.id !== produtoId));
-        mostrarNotificacao("produto deletado com sucesso!", "success")
-
-        } catch (error){
-            console.log("Error on product deletion:", error)
-            mostrarNotificacao("Erro ao deletar produto.", "error")
+            setFavoritos(prev => prev.filter(item => item.produto.id !== produtoId));
+            mostrarNotificacao("Produto removido da lista de desejos!", "success");
+        } catch (error) {
+            console.log("Error on product deletion:", error);
+            mostrarNotificacao("Erro ao remover produto.", "error");
         } 
     };
 
@@ -126,6 +125,13 @@ function ListaDesejos() {
                 </main>
             </div>
             <Footer />
+            {notificacao && (
+                <Notificacao
+                    mensagem={notificacao.mensagem}
+                    tipo={notificacao.tipo}
+                    onClose={fecharNotificacao}
+                />
+            )}
         </>
     );
 }

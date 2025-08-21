@@ -60,7 +60,12 @@ function Carrinho() {
                     preco: parseFloat(item.produto.preco),
                     quantidade: item.quantidade,
                     subtotal: item.subtotal,
-                    produto_id: item.produto.id
+                    produto_id: item.produto.id,
+                    produto: {
+                        id: item.produto.id,
+                        nome: item.produto.nome,
+                        imagem: item.produto.imagem
+                    }
                 }));
                 setItensCarrinho(items);
             } catch (error) {

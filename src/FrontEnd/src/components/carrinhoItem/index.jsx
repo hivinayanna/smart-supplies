@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import '../../styles/carrinhoItem.css';
 
 // Constantes
-const PLACEHOLDER_IMAGE = "https://via.placeholder.com/100x100.png?text=Produto";
+const PLACEHOLDER_IMAGE = "https://res.cloudinary.com/dj5eeszbx/image/upload/v1755180798/sem_imagem_o3vo3n.png";
 const MIN_QUANTITY = 1;
 
 /**
