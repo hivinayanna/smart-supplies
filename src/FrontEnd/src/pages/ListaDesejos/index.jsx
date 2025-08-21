@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import SideNavBar from '../../components/sideNavBar';
 import FavoriteCard from '../../components/favoriteCard';
 import Footer from '../../components/footer';
+import Notificacao from '../../components/notificacao';
+import { useNotificacao } from '../../hooks/useNotificacao';
 import { Navigate } from "react-router-dom";
 import '../../styles/listaDesejos.css';
 
@@ -17,11 +19,11 @@ function ListaDesejos() {
     const [favoritos, setFavoritos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [redirectToLogin, setRedirectToLogin] = useState(false);
+    const { notificacao, mostrarNotificacao, fecharNotificacao } = useNotificacao();
     const host = import.meta.env.REACT_APP_HOST || "http://localhost:8000";
-
+    const token = sessionStorage.getItem("accessToken");
     // Simular carregamento dos favoritos
     useEffect(() => {
-        const token = sessionStorage.getItem("accessToken");
 
         const fetchData = async () => {
             if (!token) {
@@ -51,23 +53,27 @@ function ListaDesejos() {
             } catch (error) {
                 console.error("Erro ao buscar produtos:", error);
             }
-            // {
-            //     id: 1,
-            //     nome: "Coca-Cola Lata 350ml",
-            //     descricao: "Refrigerante de cola em lata de 350ml",
-            //     preco: 3.50,
-            //     quantidade_estoque: 50,
-            //     imagem: "https://cdn.dooca.store/4309/products/701d27b0222a52d1980f7e84ff282b4c.jpg?v=1653064450",
-            //     categoria: { nome: "Bebidas" },
-            //     fornecedor: { nome: "Distribuidora ABC" }
-            // },
         }
         fetchData();
     }, []);
 
     // Handler para remover dos favoritos
-    const handleRemoveFavorite = (produtoId) => {
+    const handleRemoveFavorite = async (produtoId) => {
+        try {
+            await fetch(`${host}/api/lista-desejos/${produtoId}/`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
         setFavoritos(prev => prev.filter(produto => produto.id !== produtoId));
+        mostrarNotificacao("produto deletado com sucesso!", "success")
+
+        } catch (error){
+            console.log("Error on product deletion:", error)
+            mostrarNotificacao("Erro ao deletar produto.", "error")
+        } 
     };
 
     if (redirectToLogin) {
@@ -87,7 +93,7 @@ function ListaDesejos() {
 
     return (
         <>
-            <SideNavBar tipoUsuario="vendedor" />
+            <SideNavBar />
             <div className="lista-desejos-layout">
                 <main className="lista-desejos-main">
                     <div className="lista-desejos-header">

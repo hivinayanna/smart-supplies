@@ -3,7 +3,8 @@ import "../../styles/sideNavBar.css";
 import logo from "../../assets/Logo.png";
 import { Link } from "react-router-dom";
 
-function SideNavBar({ tipoUsuario }) {
+function SideNavBar() {
+  const tipoUsuario = sessionStorage.getItem("tipoUsuario")
   const isVendedor = tipoUsuario === "vendedor";
 
   return (

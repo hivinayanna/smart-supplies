@@ -10,7 +10,7 @@ function ListarFornecedores() {
   return (
     <div className="fornecedores-page-container">
       <div className="main-content">
-        <SideNavBar/>
+        <SideNavBar />
         <div className="fornecedores-content">
           <Fornecedores/>
         </div>

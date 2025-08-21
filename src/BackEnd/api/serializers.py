@@ -106,9 +106,15 @@ class ProdutoSerializer(serializers.ModelSerializer):
 
 # Serializer resumido de produto
 class ProdutoResumoSerializer(serializers.ModelSerializer):
+    imagem = serializers.SerializerMethodField()
+
     class Meta:
         model = Produto
-        fields = ['id','nome','preco']
+        fields = ['id', 'nome', 'preco', 'imagem']
+
+    def get_imagem(self, obj):
+        return obj.imagem.url if obj.imagem else None
+
 
 # Serializer para itens de pedido
 class ItemPedidoSerializer(serializers.ModelSerializer):

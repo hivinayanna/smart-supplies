@@ -20,7 +20,7 @@ const FavoriteCard = ({ produto, onRemoveFavorite }) => {
 
     // Handler para remover dos favoritos
     const handleRemoveFavorite = () => {
-        onRemoveFavorite(produto.id);
+        onRemoveFavorite(produto.produto.id);
     };
 
     return (
@@ -28,8 +28,8 @@ const FavoriteCard = ({ produto, onRemoveFavorite }) => {
             <div className="image-container">
                 <Link to={`/produto/${produto.id}`}>
                     <img
-                        src={produto.imagem || PLACEHOLDER_IMAGE}
-                        alt={produto.nome}
+                        src={produto.produto.imagem || PLACEHOLDER_IMAGE}
+                        alt={produto.produto.nome}
                         loading="lazy"
                     />
                 </Link>
@@ -46,11 +46,11 @@ const FavoriteCard = ({ produto, onRemoveFavorite }) => {
 
             <div className="card-content">
                 <h2>{produto.nome}</h2>
-                <p><strong>Descrição:</strong> {produto.descricao || 'Sem descrição'}</p>
-                <p><strong>Preço:</strong> R$ {produto.preco}</p> {/*.toFixed(2)*/}
-                <p><strong>Estoque:</strong> {produto.quantidade_estoque}</p>
-                <p><strong>Categoria:</strong> {produto.categoria?.nome}</p>
-                <p><strong>Fornecedor:</strong> {produto.fornecedor?.nome}</p>
+                <p><strong>Descrição:</strong> {produto.produto.descricao || 'Sem descrição'}</p>
+                <p><strong>Preço:</strong> R$ {produto.produto.preco}</p> {/*.toFixed(2)*/}
+                <p><strong>Estoque:</strong> {produto.estoque_produto}</p>
+                <p><strong>Categoria:</strong> {produto.produto.categoria?.nome}</p>
+                <p><strong>Fornecedor:</strong> {produto.produto.fornecedor?.username}</p>
             </div>
 
 

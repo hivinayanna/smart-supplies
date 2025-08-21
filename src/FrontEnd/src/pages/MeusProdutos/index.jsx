@@ -155,7 +155,7 @@ function MeusProdutos() {
     if (loading) {
         return (
             <div className="meus-produtos-loading">
-                <SideNavBar tipoUsuario="vendedor" />
+                <SideNavBar />
                 <div className="loading-content">
                     <p>Carregando produtos...</p>
                 </div>
@@ -166,7 +166,7 @@ function MeusProdutos() {
 
     return (
         <>
-            <SideNavBar tipoUsuario="vendedor" />
+            <SideNavBar />
             <div className="meus-produtos-layout">
                 <main className="meus-produtos-main">
                     <div className="meus-produtos-header">

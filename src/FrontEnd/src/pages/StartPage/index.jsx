@@ -18,7 +18,7 @@ function StartPage() {
       <div className="start-page">
         <Carrossel imagens={imagensBanner} />
         {/* <SideNavBar tipoUsuario = {searchParams.get('tipoUsuario')}/> */}
-        <SideNavBar tipoUsuario={sessionStorage.getItem("tipoUsuario")} />
+        <SideNavBar />
         <ProdutoList />
         <Footer />
       </div>

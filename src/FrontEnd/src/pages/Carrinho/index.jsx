@@ -3,6 +3,8 @@ import { Navigate } from "react-router-dom";
 import SideNavBar from '../../components/sideNavBar';
 import CarrinhoItem from '../../components/carrinhoItem';
 import CarrinhoResumo from '../../components/carrinhoResumo';
+import Notificacao from '../../components/notificacao';
+import { useNotificacao } from '../../hooks/useNotificacao';
 import Footer from '../../components/footer';
 import '../../styles/carrinho.css';
 
@@ -18,6 +20,7 @@ function Carrinho() {
     const [itensCarrinho, setItensCarrinho] = useState([]);
     const [loading, setLoading] = useState(true);
     const [redirectToLogin, setRedirectToLogin] = useState(false);
+    const { notificacao, mostrarNotificacao, fecharNotificacao } = useNotificacao();
     const host = import.meta.env.REACT_APP_HOST || "http://localhost:8000";
     const token = sessionStorage.getItem("accessToken");
 
@@ -81,8 +84,22 @@ function Carrinho() {
         );
     };
 
-    const handleRemoveItem = (itemId) => {
+    const handleRemoveItem = async (itemId) => {
+        try {
+            await fetch(`${host}/api/carrinho/remover/${itemId}/`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
         setItensCarrinho(itens => itens.filter(item => item.id !== itemId));
+        mostrarNotificacao("produto deletado com sucesso!", "success")
+
+        } catch (error){
+            console.log("Error on product deletion:", error)
+            mostrarNotificacao("Erro ao deletar produto.", "error")
+        } 
     };
 
     const handleCheckout = async (dadosCheckout) => {
@@ -118,7 +135,7 @@ function Carrinho() {
 
     return (
         <>
-            <SideNavBar tipoUsuario="vendedor" />
+            <SideNavBar />
             <div className="carrinho-layout">
                 
                 
