@@ -18,7 +18,8 @@ from .serializers import (
     CarrinhoSerializer,
     ProdutoResumoSerializer,
     AvaliacaoSerializer,
-    UsuarioSerializer
+    UsuarioSerializer,
+    ListaDesejosSerializer
 )
 
 class CustomTokenObtainPairView(TokenObtainPairView):  # View JWT que usa um serializer customizado
@@ -198,38 +199,37 @@ def finalizar_carrinho(request):  # Converte itens do carrinho em um Pedido
     return Response({'mensagem': 'Pedido realizado com sucesso.', 'pedido': serializer.data}, status=201)
 
 # Lista de desejos
-class ListaDesejosView(APIView): # wl
+class ListaDesejosView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):  # Retorna produtos da lista de desejos do usuário
         desejos = ListaDesejos.objects.filter(usuario=request.user)  # Busca entradas da wl do usuário
-        produtos = [item.produto for item in desejos]  # Extrai os produtos das entradas
-        serializer = ProdutoResumoSerializer(produtos, many=True)  # Serializar resumo dos produtos
-        return Response(serializer.data)  # Retorna JSON
+        serializer = ListaDesejosSerializer(desejos, many=True)  # Usa serializer completo
+        return Response(serializer.data)  # Retorna JSON com produto + imagem
 
     def post(self, request):  # Adiciona um produto à lista de desejos
         produto_id = request.data.get('produto_id')  # ID do produto a adicionar
         if not produto_id:  # Valida presença do campo
-            return Response({'erro': 'produto_id é obrigatório.'}, status=status.HTTP_400_BAD_REQUEST)  # 400
+            return Response({'erro': 'produto_id é obrigatório.'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             produto = Produto.objects.get(id=produto_id)  # Busca produto
         except Produto.DoesNotExist:
-            return Response({'erro': 'Produto não encontrado.'}, status=status.HTTP_404_NOT_FOUND)  # 404 
+            return Response({'erro': 'Produto não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
 
         if ListaDesejos.objects.filter(usuario=request.user, produto=produto).exists():
-            return Response({'mensagem': 'Produto já está na lista de desejos.'}, status=status.HTTP_200_OK)  # 200
+            return Response({'mensagem': 'Produto já está na lista de desejos.'}, status=status.HTTP_200_OK)
 
-        ListaDesejos.objects.create(usuario=request.user, produto=produto)  # Cria novo registro na wl
-        return Response({'mensagem': 'Produto adicionado à lista de desejos.'}, status=status.HTTP_201_CREATED)  # 201 criado
+        ListaDesejos.objects.create(usuario=request.user, produto=produto)
+        return Response({'mensagem': 'Produto adicionado à lista de desejos.'}, status=status.HTTP_201_CREATED)
 
     def delete(self, request, produto_id):  # Remove um produto da wl
         try:
-            item = ListaDesejos.objects.get(usuario=request.user, produto_id=produto_id)  # Busca vínculo
-            item.delete()  # Remove
-            return Response({'mensagem': 'Produto removido da lista de desejos.'}, status=status.HTTP_204_NO_CONTENT)  # 204
+            item = ListaDesejos.objects.get(usuario=request.user, produto_id=produto_id)
+            item.delete()
+            return Response({'mensagem': 'Produto removido da lista de desejos.'}, status=status.HTTP_204_NO_CONTENT)
         except ListaDesejos.DoesNotExist:
-            return Response({'erro': 'Produto não está na lista de desejos.'}, status=status.HTTP_404_NOT_FOUND)  # 404
+            return Response({'erro': 'Produto não está na lista de desejos.'}, status=status.HTTP_404_NOT_FOUND)
 
 # Avaliar produto
 @api_view(['POST'])
