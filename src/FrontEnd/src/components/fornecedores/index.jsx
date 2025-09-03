@@ -11,12 +11,12 @@ import beatrizFreitas from "../../assets/beatriz-freitas.svg";
 const Fornecedores = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
-   // Estado para redirecionar para login
+  // Estado para redirecionar para login
   const [redirectToLogin, setRedirectToLogin] = useState(false);
 
   const [fornecedores, setFornecedores] = useState([]);
 
-  // Busca a lista de produtos no bakend
+  // Busca a lista de produtos no backend
   useEffect(() => {
     const host = import.meta.env.REACT_APP_HOST || "http://localhost:8000";
     const fetchData = async () => {
@@ -88,7 +88,8 @@ const Fornecedores = () => {
     },
   ];
 
-  const dadosFornecedores = fornecedores.length > 0 ? fornecedores : fornecedoresMock;
+  const dadosFornecedores =
+    fornecedores.length > 0 ? fornecedores : fornecedoresMock;
   const fornecedoresFiltrados = dadosFornecedores.filter((fornecedor) =>
     fornecedor.nome.toLowerCase().includes(searchTerm.toLowerCase())
   );
