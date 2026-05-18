@@ -1,11 +1,11 @@
 # Smart Supplies
 
-🇧🇷 Plataforma que conecta fornecedores a vendedores, facilitando o gerenciamento de produtos, pedidos e comunicação entre as partes.
-🇺🇸 Platform that connects suppliers and sellers, simplifying product management, order processing, and communication between both parties.
+🇧🇷 Plataforma que conecta fornecedores a vendedores, facilitando o gerenciamento de produtos, pedidos e comunicação entre as partes.  
+  🇺🇸 Platform that connects suppliers and sellers, simplifying product management, order processing, and communication between both parties.
 
 ### 🔗 Demo
 
-🇧🇷 Link de demonstração: http://projeto-web-1-xi.vercel.app
+🇧🇷 Link de demonstração: http://projeto-web-1-xi.vercel.app  
 🇺🇸 Live demo: http://projeto-web-1-xi.vercel.app
 
 ### 🛠 Tecnologias | Technologies
@@ -19,7 +19,7 @@
 
 ## 📖 Visão Geral | Overview
 
-🇧🇷 Monorepo com frontend em React (Vite) e backend em Django (REST API).
+🇧🇷 Monorepo com frontend em React (Vite) e backend em Django (REST API).  
 🇺🇸 Monorepo containing a React frontend (Vite) and a Django backend (REST API).
 
 - 🇧🇷 Frontend: pasta `FrontEnd` (React + Vite)  
@@ -133,7 +133,7 @@ pytest -q
 
 ## 📬 Contato | Contact
 
-🇧🇷 Para dúvidas ou contribuições, abra uma issue ou entre em contato pelos perfis dos contribuidores.
+🇧🇷 Para dúvidas ou contribuições, abra uma issue ou entre em contato pelos perfis dos contribuidores.  
 🇺🇸 For questions or contributions, open an issue or contact the contributors through their GitHub profiles.
 
 
