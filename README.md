@@ -74,8 +74,6 @@ pytest -q
 
 ## Contribuidores
 
-<h2 id="contributors">🤝 Colaboradores</h2>
-
 <table>
   <tr>
     <td align="center">
