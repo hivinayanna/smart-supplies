@@ -16,7 +16,7 @@
     </td>
     <td align="center">
       <a href="https://github.com/rudhaesmeraldo">
-        <img src="https://avatars.githubusercontent.com/u/171964865?v=4" width="120" alt="Rudha Esmeraldo" style="border-radius: 50%;">
+        <img src="https://avatars.githubusercontent.com/u/100231973?v=4" width="120" alt="Rudha Esmeraldo" style="border-radius: 50%;">
       </a>
       <p><strong>Rudha Esmeraldo</strong></p>
       <a href="https://github.com/rudhaesmeraldo">Perfil no GitHub</a>
@@ -30,7 +30,7 @@
       </td>
     <td align="center">
       <a href="https://github.com/JeufoDev">
-        <img src="https://avatars.githubusercontent.com/u/171964865?v=4"width="120" alt="Jefferson Lucas" style="border-radius: 50%;">
+        <img src="https://avatars.githubusercontent.com/u/117694456?v=4"width="120" alt="Jefferson Lucas" style="border-radius: 50%;">
       </a>
       <p><strong>Jefferson Lucas</strong></p>
       <a href="https://github.com/JeufoDev">Perfil no GitHub</a>
@@ -89,7 +89,6 @@ Ao pesquisarmos, os cards resultantes da pesquisa são exibidos logo abaixo, jun
 
 ### 🌟 Página de Login/Cadastro
 
-OOLHO PRA CARA DA AMIGA DEU RISADA SEM GRAÇA NÃO QUERO CALA A BOCA AGORA
 
 ---
 
